@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movies/widgets/movie_page.dart';
+import 'package:movies/movie_page.dart';
 
 class MovieCard extends StatelessWidget {
   final String image;

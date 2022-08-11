@@ -1,7 +1,5 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movies/widgets/movie_page.dart';
 
 class ReviewCard extends StatelessWidget {
   final String author;
@@ -40,8 +38,7 @@ class ReviewCard extends StatelessWidget {
               Text(
                 content,
                 style: const TextStyle(
-                    fontSize: 15,
-                    overflow: TextOverflow.ellipsis),
+                    fontSize: 15, overflow: TextOverflow.ellipsis),
                 maxLines: 9,
               ),
             ]),

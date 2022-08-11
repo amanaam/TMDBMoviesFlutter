@@ -9,7 +9,7 @@ import 'package:movies/cubit/rated_movies_cubit.dart';
 import 'package:movies/widgets/review_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'movie_card.dart';
+import 'widgets/movie_card.dart';
 
 class MoviePage extends StatefulWidget {
   final int id;

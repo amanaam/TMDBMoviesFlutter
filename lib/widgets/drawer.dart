@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/cubit/authentication_cubit.dart';
 import 'package:movies/cubit/rated_movies_cubit.dart';
-import 'package:movies/widgets/rated_movies_grid.dart';
+import 'package:movies/rated_movies_page.dart';
 import 'package:provider/src/provider.dart';
 
 class MyDrawer extends StatelessWidget {
