@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/cubit/authentication_cubit.dart';
+import 'package:movies/cubit/rated_movies_cubit.dart';
+import 'package:movies/widgets/rated_movies_grid.dart';
 import 'package:provider/src/provider.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -17,7 +20,7 @@ class MyDrawer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Header',
+              'The Movie DB',
               style: textTheme.headline6,
             ),
           ),
@@ -25,23 +28,15 @@ class MyDrawer extends StatelessWidget {
             height: 1,
             thickness: 1,
           ),
-          const ListTile(
-            leading: Icon(Icons.favorite),
-            title: Text('Item 1'),
-            // selected: _selectedDestination == 0,
-            // onTap: () => selectDestination(0),
-          ),
-          const ListTile(
-            leading: Icon(Icons.delete),
-            title: Text('Item 2'),
-            // selected: _selectedDestination == 1,
-            // onTap: () => selectDestination(1),
-          ),
-          const ListTile(
-            leading: Icon(Icons.label),
-            title: Text('Item 3'),
-            // selected: _selectedDestination == 2,
-            // onTap: () => selectDestination(2),
+          ListTile(
+            leading: const Icon(Icons.favorite),
+            title: const Text('Rated Movies'),
+            onTap: () => {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => const RatedMoviesGrid(),
+              )),
+              context.read<RatedMoviesCubit>().refreshPage()
+            },
           ),
           const Divider(
             height: 1,
@@ -50,7 +45,7 @@ class MyDrawer extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
-              'Label',
+              'Action',
             ),
           ),
           ListTile(

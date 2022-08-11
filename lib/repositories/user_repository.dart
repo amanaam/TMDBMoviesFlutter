@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 class UserRepository {
@@ -30,6 +31,7 @@ class UserRepository {
           if (sessionResponse.statusCode == 200) {
             var sessionBody = json.decode(sessionResponse.body);
             // sessionid =session
+            print(sessionid);
             sessionid = sessionBody["session_id"];
             return sessionBody["session_id"];
           }

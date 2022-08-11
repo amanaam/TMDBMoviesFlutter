@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:movies/circular_progress.dart';
-import 'package:movies/cubit/authentication_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies/cubit/authentication_cubit.dart';
 import 'package:movies/login.dart';
+
 import 'cubit/authentication_cubit.dart';
 import 'cubit/authentication_state.dart';
+import 'cubit/popular_movies_cubit.dart';
+import 'cubit/rated_movies_cubit.dart';
+import 'cubit/top_movies_cubit.dart';
 import 'home_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiBlocProvider(providers: [
+    BlocProvider<PopularMoviesCubit>(
+      create: (BuildContext context) => PopularMoviesCubit(),
+    ),
+    BlocProvider<TopMoviesCubit>(
+      create: (BuildContext context) => TopMoviesCubit(),
+    ),
+    BlocProvider<RatedMoviesCubit>(
+      create: (BuildContext context) => RatedMoviesCubit(),
+    ),
+  ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -40,16 +53,17 @@ class MyApp extends StatelessWidget {
             if (state is AuthenticationAuthenticated) {
               return MaterialApp(
                 theme: ThemeData(
-                    primarySwatch: primaryBlack,
-                    brightness: Brightness.light,
-                    backgroundColor: Colors.black,),
+                  primarySwatch: primaryBlack,
+                  brightness: Brightness.light,
+                  backgroundColor: Colors.black,
+                ),
                 home: const MyHomePage(title: 'TMDB Movies'),
               );
             } else {
               return MaterialApp(
                 title: 'Flutter Demo',
                 theme: ThemeData(
-                    primarySwatch: Colors.amber, brightness: Brightness.light),
+                    primarySwatch: primaryBlack, brightness: Brightness.light),
                 home: const Login(),
               );
             }
