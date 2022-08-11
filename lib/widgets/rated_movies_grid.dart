@@ -49,6 +49,7 @@ class _RatedMoviesGridState extends State<RatedMoviesGrid> {
                             movie['poster_path'],
                         year: movie['release_date'],
                         id: movie['id'],
+                        rating: movie['rating'] ?? 0,
                       ),
                     );
                   }).toList())

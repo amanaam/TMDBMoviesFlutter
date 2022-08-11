@@ -252,7 +252,9 @@ class _MoviePageState extends State<MoviePage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 0),
                         child: RatingBar.builder(
-                          initialRating: movie['vote_average'] / 2 ?? 0,
+                          initialRating:
+                              (movie['rating'] ?? movie['vote_average']) / 2 ??
+                                  0,
                           minRating: 1,
                           direction: Axis.horizontal,
                           allowHalfRating: true,
@@ -295,7 +297,7 @@ class _MoviePageState extends State<MoviePage> {
                                       content: review['content'] ?? '');
                                 }).toList()
                               : [
-                                  ReviewCard(
+                                  const ReviewCard(
                                       author: 'No Reviews',
                                       content:
                                           'Add a review if you have seen this movie.')
@@ -327,6 +329,7 @@ class _MoviePageState extends State<MoviePage> {
                                   : '',
                               year: movie['release_date'] ?? '',
                               id: movie['id'] ?? '',
+                              rating: movie['vote_average'] ?? 0,
                             );
                           }).toList(),
                         ),

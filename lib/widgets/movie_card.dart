@@ -9,6 +9,7 @@ class MovieCard extends StatelessWidget {
   final String year;
   final String genre;
   final int id;
+  final num rating;
 
   const MovieCard({
     Key? key,
@@ -17,6 +18,7 @@ class MovieCard extends StatelessWidget {
     required this.year,
     required this.genre,
     required this.id,
+    required this.rating,
   }) : super(key: key);
 
   get dateFormatter => null;
@@ -41,12 +43,31 @@ class MovieCard extends StatelessWidget {
                 SizedBox(
                   width: 250,
                   height: 250,
-                  child: Image.network(
-                    image,
-                    fit: BoxFit.cover,
-                  ),
+                  child: Stack(children: [
+                    Image.network(
+                      image,
+                      fit: BoxFit.fill,
+                      width: MediaQuery.of(context).size.width / 2,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Card(
+                        color: Colors.red,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Text(
+                          '  ${rating.toStringAsFixed(1)}  ',
+                          style: const TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                      ),
+                    )
+                  ]),
                 ),
-                Container(
+                SizedBox(
                   width: 250,
                   height: 70,
                   child: Padding(
@@ -57,10 +78,13 @@ class MovieCard extends StatelessWidget {
                           title,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 17, fontFamily: 'Nunito'),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                              fontFamily: 'Nunito'),
                           maxLines: 2,
                         ),
-                        AutoSizeText(year.length>4? year.substring(0, 4):'',
+                        AutoSizeText(
+                            year.length > 4 ? year.substring(0, 4) : '',
                             style: const TextStyle(fontSize: 3))
                       ]),
                     ),
