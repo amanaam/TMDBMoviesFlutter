@@ -12,8 +12,9 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       emit(AuthenticationLoading());
       var sessionId = await userRepository.authenticate(
           username: username, password: password);
+      await userRepository.getGenres();
       // ignore: unrelated_type_equality_checks
-      if (sessionId != "") {
+      if (sessionId != "" && userRepository.genres != []) {
         emit(AuthenticationAuthenticated());
       } else {
         emit(AuthenticationUnauthenticated());

@@ -8,9 +8,8 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
 
   loadPopularMovies(userRepository) async {
     emit(LoadingPopularMovies());
-    await popularMovies.getGenres();
     await popularMovies.getPopularMovies(userRepository: userRepository);
-    if (popularMovies.popularMoviesList != [] && popularMovies.genres != []) {
+    if (popularMovies.popularMoviesList != []) {
       emit(LoadedPopularMovies());
     } else {
       emit(LoadingPopularMoviesFailed());

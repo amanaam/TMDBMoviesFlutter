@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/cubit/authentication_cubit.dart';
 import 'package:movies/cubit/popular_movies_cubit.dart';
 import 'package:movies/cubit/popular_movies_state.dart';
-import 'package:movies/repositories/popular_movies_repository.dart';
+import 'package:movies/repositories/user_repository.dart';
 import 'package:movies/widgets/movie_card.dart';
 
 class PopularMoviesGrid extends StatefulWidget {

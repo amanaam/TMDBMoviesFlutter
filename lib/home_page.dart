@@ -2,14 +2,13 @@ import 'package:filter_list/filter_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies/cubit/authentication_cubit.dart';
 import 'package:movies/cubit/search_movies_cubit.dart';
-import 'package:movies/repositories/popular_movies_repository.dart';
+import 'package:movies/repositories/user_repository.dart';
 import 'package:movies/search_page.dart';
 import 'package:movies/widgets/drawer.dart';
 import 'package:movies/widgets/popular_movies_grid.dart';
 import 'package:movies/widgets/top_movies_grid.dart';
-
-import 'cubit/popular_movies_cubit.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -47,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     List<Genre> genres =
-        context.read<PopularMoviesCubit>().popularMovies.genres;
+        context.read<AuthenticationCubit>().userRepository.genres;
     return DefaultTabController(
         length: 2,
         child: Scaffold(

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/cubit/authentication_cubit.dart';
 import 'package:movies/cubit/top_movies_cubit.dart';
-import 'package:movies/repositories/popular_movies_repository.dart';
+import 'package:movies/repositories/user_repository.dart';
 import 'package:movies/widgets/movie_card.dart';
 import 'package:provider/src/provider.dart';
 
