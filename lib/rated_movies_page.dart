@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies/cubit/authentication_cubit.dart';
 import 'package:movies/cubit/rated_movies_cubit.dart';
 import 'package:movies/widgets/movie_card.dart';
+
+import 'cubit/authentication_cubit.dart';
 
 class RatedMoviesGrid extends StatefulWidget {
   const RatedMoviesGrid({Key? key}) : super(key: key);

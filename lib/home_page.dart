@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/cubit/authentication_cubit.dart';
+import 'package:movies/cubit/rated_movies_cubit.dart';
 import 'package:movies/cubit/search_movies_cubit.dart';
 import 'package:movies/repositories/user_repository.dart';
 import 'package:movies/search_page.dart';
@@ -73,11 +74,24 @@ class _MyHomePageState extends State<MyHomePage> {
                   icon: const Icon(Icons.search)),
             ],
           ),
-          body: TabBarView(
-            children: [
-              PopularMoviesGrid(genres: selectedGenreList),
-              TopMoviesGrid(genres: selectedGenreList)
-            ],
+          body: BlocBuilder<RatedMoviesCubit, RatedMoviesState>(
+            builder: (context, state) {
+              if (state is LoadedRatedMovies) {
+                return TabBarView(
+                  children: [
+                    PopularMoviesGrid(genres: selectedGenreList),
+                    TopMoviesGrid(genres: selectedGenreList)
+                  ],
+                );
+              } else {
+                return const Center(
+                    child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                            semanticsLabel: 'Linear progress indicator')));
+              }
+            },
           ),
           drawer: MyDrawer(),
         ));

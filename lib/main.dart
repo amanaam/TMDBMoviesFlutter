@@ -51,6 +51,8 @@ class MyApp extends StatelessWidget {
         child: BlocBuilder<AuthenticationCubit, AuthenticationState>(
           builder: (context, state) {
             if (state is AuthenticationAuthenticated) {
+              context.read<RatedMoviesCubit>().loadRatedMovies(
+                  context.read<AuthenticationCubit>().userRepository);
               return MaterialApp(
                 theme: ThemeData(
                   primarySwatch: primaryBlack,
