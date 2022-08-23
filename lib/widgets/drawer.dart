@@ -31,11 +31,12 @@ class MyDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.favorite),
             title: const Text('Rated Movies'),
-            onTap: () => {
+            onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => const RatedMoviesGrid(),
-              )),
-              context.read<RatedMoviesCubit>().refreshPage()
+                builder: (_) =>
+                    const RatedMoviesGrid(), // _ is for anonymous route
+              ));
+              context.read<RatedMoviesCubit>().refreshPage();
             },
           ),
           const Divider(
@@ -52,7 +53,9 @@ class MyDrawer extends StatelessWidget {
               leading: const Icon(Icons.logout),
               title: const Text('Log Out'),
               // selected: _selectedDestination == 3,
-              onTap: () => (context.read<AuthenticationCubit>().logout())),
+              onTap: () {
+                context.read<AuthenticationCubit>().logout();
+              }),
         ],
       ),
     ));

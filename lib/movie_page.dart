@@ -34,7 +34,7 @@ class _MoviePageState extends State<MoviePage> {
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Color(0x44000000),
+          backgroundColor: const Color(0x44000000),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.of(context).pop(),
@@ -43,13 +43,18 @@ class _MoviePageState extends State<MoviePage> {
         body: BlocListener<RatedMoviesCubit, RatedMoviesState>(
             listener: (context, state) {
           if (state is RatedMovie) {
-            Scaffold.of(context).showSnackBar(const SnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 backgroundColor: Colors.green,
                 content: Text("Movie successfully rated!")));
+            context.read<RatedMoviesCubit>().loadRatedMovies(
+                context.read<AuthenticationCubit>().userRepository);
           } else if (state is RateMovieFailed) {
-            Scaffold.of(context).showSnackBar(const SnackBar(
+            //
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 backgroundColor: Colors.red,
                 content: Text("Failed to rate movie, Please try again!")));
+            context.read<RatedMoviesCubit>().loadRatedMovies(
+                context.read<AuthenticationCubit>().userRepository);
           }
         }, child:
                 BlocBuilder<MovieCubit, MovieState>(builder: (context, state) {

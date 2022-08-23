@@ -33,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
       width: MediaQuery.of(context).size.width * 0.85,
       insetPadding: const EdgeInsets.all(10),
       onItemSearch: (genre, query) {
-        return genre.name!.toLowerCase().contains(query.toLowerCase());
+        return genre.name.toLowerCase().contains(query.toLowerCase());
       },
       onApplyButtonClick: (list) {
         setState(() {
