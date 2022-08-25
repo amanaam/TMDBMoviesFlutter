@@ -1,15 +1,16 @@
 import 'package:filter_list/filter_list.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies/cubit/authentication_cubit.dart';
 import 'package:movies/cubit/rated_movies_cubit.dart';
 import 'package:movies/cubit/search_movies_cubit.dart';
+import 'package:movies/presentation_layer/pages/search_page.dart';
+import 'package:movies/presentation_layer/utils/constants.dart';
+import 'package:movies/presentation_layer/utils/size_config.dart';
+import 'package:movies/presentation_layer/widgets/drawer.dart';
+import 'package:movies/presentation_layer/widgets/linear_progress_indicator_widget.dart';
+import 'package:movies/presentation_layer/widgets/popular_movies_grid.dart';
+import 'package:movies/presentation_layer/widgets/top_movies_grid.dart';
 import 'package:movies/repositories/user_repository.dart';
-import 'package:movies/search_page.dart';
-import 'package:movies/widgets/drawer.dart';
-import 'package:movies/widgets/popular_movies_grid.dart';
-import 'package:movies/widgets/top_movies_grid.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -21,17 +22,17 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Genre> selectedGenreList = [];
-  void openFilterDialog(genres) async {
-    debugPrint("i am also tapped");
+
+  void _openFilterDialog(genres) async {
     await FilterListDialog.display<Genre>(
       context,
       listData: genres,
       selectedListData: selectedGenreList,
       choiceChipLabel: (genre) => genre!.name,
       validateSelectedItem: (list, val) => list!.contains(val),
-      height: MediaQuery.of(context).size.width * 1.25,
-      width: MediaQuery.of(context).size.width * 0.85,
-      insetPadding: const EdgeInsets.all(10),
+      height: SizeConfig.screenWidth * 1.25,
+      width: SizeConfig.screenWidth * 0.85,
+      insetPadding: const EdgeInsets.all(NORMAL_PADDING),
       onItemSearch: (genre, query) {
         return genre.name.toLowerCase().contains(query.toLowerCase());
       },
@@ -46,31 +47,37 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Genre> genres =
-        context.read<AuthenticationCubit>().userRepository.genres;
+    List<Genre> genres = [];
+    // context.read<AuthenticationCubit>().userRepository.genres;
     return DefaultTabController(
         length: 2,
         child: Scaffold(
           appBar: AppBar(
             bottom: const TabBar(
               tabs: [
-                Tab(text: 'Popular'),
-                Tab(text: 'Top Rated'),
+                Tab(text: HOME_TAB_TITLE_1),
+                Tab(text: HOME_TAB_TITLE_2),
               ],
             ),
             title: Text(widget.title),
             actions: [
               IconButton(
-                  onPressed: () =>
-                      {openFilterDialog(genres), debugPrint('I am tapped')},
+                  onPressed: () {
+                    _openFilterDialog(genres);
+                  },
                   icon: const Icon(Icons.filter_list)),
               // Navigate to the Search Screen
               IconButton(
-                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => BlocProvider(
-                            create: (context) => SearchMoviesCubit(),
-                            child: SearchPage(),
-                          ))),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => BlocProvider(
+                          create: (context) => SearchMoviesCubit(),
+                          child: SearchPage(),
+                        ),
+                      ),
+                    );
+                  },
                   icon: const Icon(Icons.search)),
             ],
           ),
@@ -84,16 +91,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 );
               } else {
-                return const Center(
-                    child: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                            semanticsLabel: 'Linear progress indicator')));
+                return const CustomLinearProgressIndicator();
               }
             },
           ),
-          drawer: MyDrawer(),
+          drawer: const MyDrawer(),
         ));
   }
 }

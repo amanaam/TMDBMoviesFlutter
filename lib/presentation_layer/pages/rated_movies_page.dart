@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/cubit/rated_movies_cubit.dart';
-import 'package:movies/widgets/movie_card.dart';
-
-import 'cubit/authentication_cubit.dart';
+import 'package:movies/presentation_layer/utils/constants.dart';
+import 'package:movies/presentation_layer/widgets/linear_progress_indicator_widget.dart';
+import 'package:movies/presentation_layer/widgets/movie_card.dart';
 
 class RatedMoviesGrid extends StatefulWidget {
   const RatedMoviesGrid({Key? key}) : super(key: key);
@@ -26,13 +26,7 @@ class _RatedMoviesGridState extends State<RatedMoviesGrid> {
       body: BlocBuilder<RatedMoviesCubit, RatedMoviesState>(
           builder: (context, state) {
         if (state is LoadingRatedMovies) {
-          return const Center(
-            child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                    semanticsLabel: 'Linear progress indicator')),
-          );
+          return const CustomLinearProgressIndicator();
         } else if (state is LoadedRatedMovies) {
           var ratedMovies =
               context.read<RatedMoviesCubit>().ratedMovies.ratedMoviesList;
@@ -56,19 +50,13 @@ class _RatedMoviesGridState extends State<RatedMoviesGrid> {
                   }).toList())
               : const Center(
                   child: Text(
-                  "You haven't rated any movies yet!",
+                  NO_RATED_MOVIES_PLACEHOLDER,
                   style: TextStyle(fontSize: 17),
                 ));
         } else {
-          context.read<RatedMoviesCubit>().loadRatedMovies(
-              context.read<AuthenticationCubit>().userRepository);
-          return const Center(
-            child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                    semanticsLabel: 'Linear progress indicator')),
-          );
+          // context.read<RatedMoviesCubit>().loadRatedMovies(
+          //     context.read<AuthenticationCubit>().userRepository);
+          return const CustomLinearProgressIndicator();
         }
       }),
     );

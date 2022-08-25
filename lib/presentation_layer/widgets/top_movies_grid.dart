@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/cubit/rated_movies_cubit.dart';
 import 'package:movies/cubit/top_movies_cubit.dart';
 import 'package:movies/repositories/user_repository.dart';
-import 'package:movies/widgets/movie_card.dart';
 import 'package:provider/src/provider.dart';
+
+import 'linear_progress_indicator_widget.dart';
+import 'movie_card.dart';
 
 class TopMoviesGrid extends StatefulWidget {
   const TopMoviesGrid({Key? key, required this.genres}) : super(key: key);
@@ -21,13 +23,7 @@ class _TopMoviesGridState extends State<TopMoviesGrid> {
     return BlocBuilder<TopMoviesCubit, TopMoviesState>(
         builder: (context, state) {
       if (state is LoadingTopMovies) {
-        return const Center(
-          child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                  semanticsLabel: 'Linear progress indicator')),
-        );
+        return const CustomLinearProgressIndicator();
       } else if (state is LoadedTopMovies) {
         List filteredMovies = context
             .read<TopMoviesCubit>()
@@ -76,13 +72,7 @@ class _TopMoviesGridState extends State<TopMoviesGrid> {
         context
             .read<TopMoviesCubit>()
             .loadTopRatedMovies(context.read<RatedMoviesCubit>().ratedMovies);
-        return const Center(
-          child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                  semanticsLabel: 'Linear progress indicator')),
-        );
+        return const CustomLinearProgressIndicator();
       }
     });
   }

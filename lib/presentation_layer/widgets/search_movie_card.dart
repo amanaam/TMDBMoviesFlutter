@@ -1,8 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../movie_page.dart';
+import 'package:movies/presentation_layer/pages/movie_page.dart';
+import 'package:movies/presentation_layer/utils/size_config.dart';
 
 class SearchMovieCard extends StatelessWidget {
   final String image;
@@ -35,14 +35,14 @@ class SearchMovieCard extends StatelessWidget {
           );
         },
         child: SizedBox(
-          width: MediaQuery.of(context).size.width,
+          width: SizeConfig.screenWidth,
           height: 100,
           child: Card(
             clipBehavior: Clip.antiAliasWithSaveLayer,
             child: Row(
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width / 3,
+                  width: SizeConfig.screenWidth / 3,
                   height: 100,
                   child: Image.network(
                     image,
@@ -50,14 +50,14 @@ class SearchMovieCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 2 * MediaQuery.of(context).size.width / 3 - 20,
+                  width: 2 * SizeConfig.screenWidth / 3 - 20,
                   height: 100,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
                         SizedBox(
-                          width: 2 * MediaQuery.of(context).size.width / 3 - 20,
+                          width: 2 * SizeConfig.screenWidth / 3 - 20,
                           child: SingleChildScrollView(
                             child: Text(
                               title,
@@ -71,14 +71,14 @@ class SearchMovieCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          width: 2 * MediaQuery.of(context).size.width / 3 - 20,
+                          width: 2 * SizeConfig.screenWidth / 3 - 20,
                           child: AutoSizeText(
                               year.length >= 4 ? year.substring(0, 4) : '',
                               textAlign: TextAlign.left,
                               style: const TextStyle(fontSize: 3)),
                         ),
                         SizedBox(
-                          width: 2 * MediaQuery.of(context).size.width / 3 - 20,
+                          width: 2 * SizeConfig.screenWidth / 3 - 20,
                           child: ClipRect(
                             child: AutoSizeText(
                               description,

@@ -5,8 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/cubit/popular_movies_cubit.dart';
 import 'package:movies/cubit/popular_movies_state.dart';
 import 'package:movies/cubit/rated_movies_cubit.dart';
+import 'package:movies/presentation_layer/widgets/linear_progress_indicator_widget.dart';
+import 'package:movies/presentation_layer/widgets/movie_card.dart';
 import 'package:movies/repositories/user_repository.dart';
-import 'package:movies/widgets/movie_card.dart';
 
 class PopularMoviesGrid extends StatefulWidget {
   const PopularMoviesGrid({Key? key, required this.genres}) : super(key: key);
@@ -23,13 +24,7 @@ class _PopularMoviesGridState extends State<PopularMoviesGrid> {
         builder: (context, state) {
       if (state is LoadingPopularMovies) {
         debugPrint(widget.genres.toString());
-        return const Center(
-          child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                  semanticsLabel: 'Linear progress indicator')),
-        );
+        return const CustomLinearProgressIndicator();
       } else if (state is LoadedPopularMovies) {
         List filteredMovies = context
             .read<PopularMoviesCubit>()
@@ -78,13 +73,7 @@ class _PopularMoviesGridState extends State<PopularMoviesGrid> {
         context
             .read<PopularMoviesCubit>()
             .loadPopularMovies(context.read<RatedMoviesCubit>().ratedMovies);
-        return const Center(
-          child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                  semanticsLabel: 'Linear progress indicator')),
-        );
+        return const CustomLinearProgressIndicator();
       }
     });
   }

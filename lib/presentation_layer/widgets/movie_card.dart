@@ -1,7 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movies/movie_page.dart';
+import 'package:movies/presentation_layer/pages/movie_page.dart';
+import 'package:movies/presentation_layer/utils/size_config.dart';
 
 class MovieCard extends StatelessWidget {
   final String image;
@@ -34,7 +35,7 @@ class MovieCard extends StatelessWidget {
           );
         },
         child: SizedBox(
-          width: MediaQuery.of(context).size.width / 2,
+          width: SizeConfig.screenWidth * 0.5,
           height: 340,
           child: Card(
             clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -47,7 +48,7 @@ class MovieCard extends StatelessWidget {
                     Image.network(
                       image,
                       fit: BoxFit.fill,
-                      width: MediaQuery.of(context).size.width / 2,
+                      width: SizeConfig.screenWidth / 2,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(12),
