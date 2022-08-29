@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies/cubit/search_movies_cubit.dart';
+import 'package:movies/bloc/movies_bloc.dart';
+import 'package:movies/presentation_layer/widgets/linear_progress_indicator_widget.dart';
 import 'package:movies/presentation_layer/widgets/search_movie_card.dart';
 import 'package:provider/src/provider.dart';
 
@@ -10,6 +13,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  Timer? _debounce;
   final searchTextController = TextEditingController();
 
   void _search() {
@@ -17,7 +21,10 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void _on_search(BuildContext context, String text) {
-    context.read<SearchMoviesCubit>().loadSearchMovies(text);
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 1000), () {
+      context.read<MoviesBloc>().add(MoviesSearchEvent(text));
+    });
   }
 
   @override
@@ -28,6 +35,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     searchTextController.dispose();
     super.dispose();
   }
@@ -35,9 +43,17 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            // The search area heresss
-            title: Container(
+      appBar: AppBar(
+        leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+              context.read<MoviesBloc>().add(MoviesInitialEvent());
+            }),
+        // The search area heresss
+        title: Container(
           width: double.infinity,
           height: 40,
           decoration: BoxDecoration(
@@ -60,42 +76,34 @@ class _SearchPageState extends State<SearchPage> {
                   border: InputBorder.none),
             ),
           ),
-        )),
-        body: BlocBuilder<SearchMoviesCubit, SearchMoviesState>(
-            builder: (context, state) {
-          if (state is SearchMoviesInitial) {
+        ),
+      ),
+      body: BlocBuilder<MoviesBloc, MoviesState>(
+        builder: (context, state) {
+          if (state is MoviesInitialState) {
             return const Center(
               child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Text('Search for movies')),
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Text(
+                  'Sear ch for movies',
+                ),
+              ),
             );
-          } else if (state is LoadedSearchMovies) {
+          } else if (state is MoviesLoadedState) {
             return ListView(
-                children: context
-                    .read<SearchMoviesCubit>()
-                    .searchMovies
-                    .searchMoviesList
-                    .map<Widget>((movie) {
-              return SearchMovieCard(
-                genre: '',
-                title: movie['title'] ?? '',
-                image: movie['poster_path'] != null
-                    ? 'https://image.tmdb.org/t/p/w200' + movie['poster_path']
-                    : '',
-                year: movie['release_date'] ?? '',
-                description: movie['overview'] ?? '',
-                id: movie['id'],
-              );
-            }).toList());
-          } else {
-            return const Center(
-              child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: CircularProgressIndicator(
-                    semanticsLabel: 'Linear progress indicator',
-                  )),
+              children: state.movieRepository.searchMoviesList.map<Widget>(
+                (movie) {
+                  return SearchMovieCard(
+                    movie: movie,
+                  );
+                },
+              ).toList(),
             );
+          } else {
+            return const CustomLinearProgressIndicator();
           }
-        }));
+        },
+      ),
+    );
   }
 }

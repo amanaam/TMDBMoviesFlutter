@@ -1,25 +1,14 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/data/models/movie_model.dart';
 import 'package:movies/presentation_layer/pages/movie_page.dart';
 import 'package:movies/presentation_layer/utils/size_config.dart';
 
 class MovieCard extends StatelessWidget {
-  final String image;
-  final String title;
-  final String year;
-  final String genre;
-  final int id;
-  final num rating;
+  final MovieModel movie;
 
   const MovieCard({
     Key? key,
-    required this.image,
-    required this.title,
-    required this.year,
-    required this.genre,
-    required this.id,
-    required this.rating,
+    required this.movie,
   }) : super(key: key);
 
   get dateFormatter => null;
@@ -31,7 +20,10 @@ class MovieCard extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MoviePage(id: id)),
+            MaterialPageRoute(
+                builder: (context) => MoviePage(
+                      movie: movie,
+                    )),
           );
         },
         child: SizedBox(
@@ -46,7 +38,7 @@ class MovieCard extends StatelessWidget {
                   height: 250,
                   child: Stack(children: [
                     Image.network(
-                      image,
+                      movie.posterPath,
                       fit: BoxFit.fill,
                       width: SizeConfig.screenWidth / 2,
                     ),
@@ -58,7 +50,7 @@ class MovieCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(50),
                         ),
                         child: Text(
-                          '  ${rating.toStringAsFixed(1)}  ',
+                          '  ${movie.rating == 0 ? movie.voteAverage.toStringAsFixed(1) : movie.rating.toStringAsFixed(1)}  ',
                           style: const TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.bold,
@@ -75,18 +67,23 @@ class MovieCard extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
                       child: Column(children: [
-                        AutoSizeText(
-                          title,
+                        Text(
+                          movie.title,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 17,
+                              fontSize: 16,
                               fontFamily: 'Nunito'),
                           maxLines: 2,
                         ),
-                        AutoSizeText(
-                            year.length > 4 ? year.substring(0, 4) : '',
-                            style: const TextStyle(fontSize: 3))
+                        Text(
+                            movie.releaseDate.length > 4
+                                ? movie.releaseDate.substring(0, 4)
+                                : '',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              overflow: TextOverflow.fade,
+                            ))
                       ]),
                     ),
                   ),

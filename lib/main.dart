@@ -5,23 +5,12 @@ import 'package:movies/presentation_layer/pages/login_page.dart';
 import 'package:movies/presentation_layer/utils/colors.dart';
 import 'package:movies/presentation_layer/utils/constants.dart';
 
+import 'app_config.dart';
 import 'bloc/authentication_bloc.dart';
-import 'cubit/popular_movies_cubit.dart';
-import 'cubit/rated_movies_cubit.dart';
-import 'cubit/top_movies_cubit.dart';
 
 void main() {
-  runApp(MultiBlocProvider(providers: [
-    BlocProvider<PopularMoviesCubit>(
-      create: (BuildContext context) => PopularMoviesCubit(),
-    ),
-    BlocProvider<TopMoviesCubit>(
-      create: (BuildContext context) => TopMoviesCubit(),
-    ),
-    BlocProvider<RatedMoviesCubit>(
-      create: (BuildContext context) => RatedMoviesCubit(),
-    ),
-  ], child: const MyApp()));
+  AppConfig.setEnvironment(Environment.PROD);
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

@@ -2,13 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/bloc/authentication_bloc.dart';
-import 'package:movies/cubit/rated_movies_cubit.dart';
+import 'package:movies/bloc/movies_bloc.dart';
 import 'package:movies/presentation_layer/pages/rated_movies_page.dart';
 import 'package:movies/presentation_layer/utils/constants.dart';
 import 'package:provider/src/provider.dart';
 
 class MyDrawer extends StatelessWidget {
-  const MyDrawer({Key? key}) : super(key: key);
+  final BuildContext homecontext;
+
+  const MyDrawer({
+    Key? key,
+    required this.homecontext,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +40,15 @@ class MyDrawer extends StatelessWidget {
               leading: const Icon(Icons.favorite),
               title: const Text(RATED_MOVIES_TITLE),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) =>
-                      const RatedMoviesGrid(), // _ is for anonymous route
-                ));
-                context.read<RatedMoviesCubit>().refreshPage();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (_) => Provider.value(
+                            value: BlocProvider.of<MoviesBloc>(homecontext),
+                            child: const RatedMoviesGrid(),
+                          ) // _ is for anonymous route
+                      ),
+                );
+                // context.read<RatedMoviesCubit>().refreshPage();
               },
             ),
             const Divider(

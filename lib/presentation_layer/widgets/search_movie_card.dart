@@ -1,25 +1,15 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/data/models/movie_model.dart';
 import 'package:movies/presentation_layer/pages/movie_page.dart';
 import 'package:movies/presentation_layer/utils/size_config.dart';
 
 class SearchMovieCard extends StatelessWidget {
-  final String image;
-  final String title;
-  final String year;
-  final String genre;
-  final String description;
-  final int id;
+  final MovieModel movie;
 
   const SearchMovieCard({
     Key? key,
-    required this.image,
-    required this.title,
-    required this.year,
-    required this.genre,
-    required this.description,
-    required this.id,
+    required this.movie,
   }) : super(key: key);
 
   get dateFormatter => null;
@@ -31,7 +21,11 @@ class SearchMovieCard extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MoviePage(id: id)),
+            MaterialPageRoute(
+              builder: (context) => MoviePage(
+                movie: movie,
+              ),
+            ),
           );
         },
         child: SizedBox(
@@ -45,7 +39,7 @@ class SearchMovieCard extends StatelessWidget {
                   width: SizeConfig.screenWidth / 3,
                   height: 100,
                   child: Image.network(
-                    image,
+                    movie.posterPath,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -60,7 +54,7 @@ class SearchMovieCard extends StatelessWidget {
                           width: 2 * SizeConfig.screenWidth / 3 - 20,
                           child: SingleChildScrollView(
                             child: Text(
-                              title,
+                              movie.title,
                               textAlign: TextAlign.left,
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -72,16 +66,18 @@ class SearchMovieCard extends StatelessWidget {
                         ),
                         SizedBox(
                           width: 2 * SizeConfig.screenWidth / 3 - 20,
-                          child: AutoSizeText(
-                              year.length >= 4 ? year.substring(0, 4) : '',
+                          child: Text(
+                              movie.releaseDate.length >= 4
+                                  ? movie.releaseDate.substring(0, 4)
+                                  : '',
                               textAlign: TextAlign.left,
                               style: const TextStyle(fontSize: 3)),
                         ),
                         SizedBox(
                           width: 2 * SizeConfig.screenWidth / 3 - 20,
                           child: ClipRect(
-                            child: AutoSizeText(
-                              description,
+                            child: Text(
+                              movie.overview,
                               style: const TextStyle(
                                   fontSize: 14,
                                   overflow: TextOverflow.ellipsis),

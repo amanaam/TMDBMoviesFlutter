@@ -9,6 +9,8 @@ class AuthenticationRepository {
       username: username,
       password: password,
     );
-    authenticated = true;
+    if (sessionId != '') {
+      authenticated = true;
+    }
   }
 }

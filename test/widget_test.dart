@@ -6,13 +6,12 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:movies/repositories/user_repository.dart';
 
 void main() {
   test('API Call', () async {
-    final UserRepository user = new UserRepository();
-    var call =
-        await user.authenticate(username: "testmanaam", password: "test");
+    // final UserRepository user = new UserRepository();
+    // var call =
+    //     await user.authenticate(username: "testmanaam", password: "test");
     // final GetMovies movies = new GetMovies();
     // var body =
     //     await movies.getSearchMovies(userRepository: user, searchString: "test");

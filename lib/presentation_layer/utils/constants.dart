@@ -12,7 +12,10 @@ const double NORMAL_PADDING = 10;
 
 const String HOME_TAB_TITLE_1 = 'Popular';
 
-const String HOME_TAB_TITLE_2 = 'Popular';
+const String HOME_TAB_TITLE_2 = 'Top Rated';
+
+const String IMAGE_POSTER_DEFAULT =
+    'https://play-lh.googleusercontent.com/IO3niAyss5tFXAQP176P0Jk5rg_A_hfKPNqzC4gb15WjLPjo5I-f7oIZ9Dqxw2wPBAg';
 
 const String IMAGE_POSTER_STARTING_URL_SMALL =
     'https://image.tmdb.org/t/p/w200';
