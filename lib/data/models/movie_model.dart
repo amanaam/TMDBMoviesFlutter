@@ -39,8 +39,10 @@ class MovieModel extends Movie {
         );
   factory MovieModel.fromJSON(Map<String, dynamic> json) {
     return MovieModel(
-      adult: json['adult'],
-      genres: json['genres'] ?? [],
+      adult: json['adult'] ?? false,
+      genres: json['genre_ids'] ??
+          json['genres'].map((genre) => genre['id']).toList() ??
+          [],
       homepage: json['homepage'] ?? '',
       id: json['id'],
       imdbId: json['imdbId'] ?? '',
@@ -58,7 +60,11 @@ class MovieModel extends Movie {
           ? json['release_date'].substring(0, 4)
           : '',
       voteAverage: json['vote_average'] ?? 0,
-      productionCompanies: json['production_companies'] ?? [],
+      productionCompanies: json['production_companies'] != null
+          ? json['production_companies']
+              .map((company) => company['name'])
+              .toList()
+          : [],
       rating: json['rating'] ?? 0,
       runtime: json['runtime'] ?? 0,
     );

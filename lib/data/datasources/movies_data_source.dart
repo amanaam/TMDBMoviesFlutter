@@ -27,6 +27,20 @@ abstract class Movies {
   Future<List<MovieModel>> getMovieRecommendations({
     required String movieId,
   });
+
+  Future<MovieModel> getMovie({
+    required String movieId,
+  });
+
+  Future<List> getMovieCast({
+    required String movieId,
+  });
+
+  Future<List<ReviewModel>> getMovieReviews({
+    required String movieId,
+  });
+
+  Future<List<GenreModel>> getGenre();
 }
 
 class MoviesImpl implements Movies {
@@ -34,7 +48,6 @@ class MoviesImpl implements Movies {
   Future<List<MovieModel>> getPopularMovies() async {
     dynamic results = [];
     for (var i = 1; i < 3; i++) {
-      print(Conf.baseUrl.get);
       var url = Uri.parse(
           '${Conf.baseUrl.get}movie/popular?api_key=${Conf.apiKey.get}&language=en-US&page=$i');
       var response = await http.get(url);
@@ -62,7 +75,6 @@ class MoviesImpl implements Movies {
   Future<List<MovieModel>> getTopRatedMovies() async {
     dynamic results = [];
     for (var i = 1; i < 3; i++) {
-      print(Conf.baseUrl.get);
       var url = Uri.parse(
           '${Conf.baseUrl.get}movie/top_rated?api_key=${Conf.apiKey.get}&language=en-US&page=$i');
       var response = await http.get(url);
@@ -84,7 +96,6 @@ class MoviesImpl implements Movies {
           ),
         )
         .toList();
-    print(x);
     return x;
   }
 
@@ -193,32 +204,33 @@ class MoviesImpl implements Movies {
         .toList();
   }
 
-  Future<List<MovieModel>> getMovie({
+  @override
+  Future<MovieModel> getMovie({
     required String movieId,
   }) async {
     dynamic results;
     var url = Uri.parse(
-        '${Conf.baseUrl.get}movie/$movieId/recommendations?api_key=${Conf.apiKey.get}&language=en-US&page=1');
+      '${Conf.baseUrl.get}movie/$movieId?api_key=${Conf.apiKey.get}&language=en-US',
+    );
     var response = await http.get(url);
     if (response.statusCode == 200) {
-      results = json.decode(
+      dynamic x = json.decode(
         Utf8Decoder().convert(
           response.bodyBytes,
         ),
-      )['results'];
-    }
-    return results
-        .map<MovieModel>(
-          (
-            r,
-          ) =>
-              MovieModel.fromJSON(
-            r,
+      );
+      results = MovieModel.fromJSON(
+        json.decode(
+          Utf8Decoder().convert(
+            response.bodyBytes,
           ),
-        )
-        .toList();
+        ),
+      );
+    }
+    return results;
   }
 
+  @override
   Future<List> getMovieCast({
     required String movieId,
   }) async {
@@ -263,6 +275,7 @@ class MoviesImpl implements Movies {
     ];
   }
 
+  @override
   Future<List<ReviewModel>> getMovieReviews({
     required String movieId,
   }) async {
@@ -283,6 +296,32 @@ class MoviesImpl implements Movies {
             r,
           ) =>
               ReviewModel.fromJSON(
+            r,
+          ),
+        )
+        .toList();
+  }
+
+  @override
+  Future<List<GenreModel>> getGenre() async {
+    dynamic results;
+    Uri url = Uri.parse(
+      '${Conf.baseUrl.get}genre/movie/list?api_key=${Conf.apiKey.get}&language=en-US',
+    );
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      results = json.decode(
+        Utf8Decoder().convert(
+          response.bodyBytes,
+        ),
+      )['genres'];
+    }
+    return results
+        .map<GenreModel>(
+          (
+            r,
+          ) =>
+              GenreModel.fromJSON(
             r,
           ),
         )

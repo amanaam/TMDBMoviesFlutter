@@ -46,13 +46,13 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
             event.search,
             movieRepository,
           );
-          if (movieRepository.searchMoviesList != []) {
+          if (movieRepository.searchMoviesList.isNotEmpty) {
             emit(MoviesLoadedState(movieRepository));
           } else {
             emit(MoviesLoadingFailedState());
           }
         }
-        if (event is MoviesInitialEvent){
+        if (event is MoviesInitialEvent) {
           emit(MoviesInitialState());
         }
 

@@ -87,7 +87,7 @@ class _MoviePageState extends State<MoviePage> {
       // context.read<Mo>().loadMovie(widget.movie.id);
       return const CustomLinearProgressIndicator();
     } else if (state is MoviesLoadedState) {
-      MovieModel movie = widget.movie;
+      MovieModel movie = state.movieRepository.movie;
       List<CastModel> movieCast = state.movieRepository.cast;
       List<CrewModel> movieCrew = state.movieRepository.crew
           .where(
@@ -271,7 +271,7 @@ class _MoviePageState extends State<MoviePage> {
         ),
         child: Text(
           'Production Studios: ${movie.productionCompanies.map((cast) {
-            return cast['name'] ?? '';
+            return cast ?? '';
           })}'
               .replaceAll('(', '')
               .replaceAll(')', ''),

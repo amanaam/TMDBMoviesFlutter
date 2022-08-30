@@ -11,6 +11,8 @@ class MovieRepository {
   late List<ReviewModel> reviews;
   late List<CastModel> cast;
   late List<CrewModel> crew;
+  late List<GenreModel> genres;
+  late MovieModel movie;
   bool searched = false;
 
   Future<void> getMovies(
@@ -21,6 +23,7 @@ class MovieRepository {
     ratedMoviesList = await MoviesImpl().getRatedMovies(
       authenticationRepository: authenticationRepository,
     );
+    genres = await MoviesImpl().getGenre();
   }
 
   Future<void> getPopularMovies() async {
@@ -42,6 +45,9 @@ class MovieRepository {
   Future<void> getMovieDetails(
     String movieId,
   ) async {
+    movie = await MoviesImpl().getMovie(
+      movieId: movieId,
+    );
     recommendations = await MoviesImpl().getMovieRecommendations(
       movieId: movieId,
     );
