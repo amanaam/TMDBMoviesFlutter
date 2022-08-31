@@ -8,14 +8,14 @@ import 'package:movies/presentation_layer/utils/constants.dart';
 import 'package:movies/presentation_layer/widgets/linear_progress_indicator_widget.dart';
 import 'package:movies/presentation_layer/widgets/movie_card.dart';
 
-class RatedMoviesGrid extends StatefulWidget {
-  const RatedMoviesGrid({Key? key}) : super(key: key);
+class RatedMoviesPage extends StatefulWidget {
+  const RatedMoviesPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _RatedMoviesGridState();
+  State<StatefulWidget> createState() => _RatedMoviesPageState();
 }
 
-class _RatedMoviesGridState extends State<RatedMoviesGrid> {
+class _RatedMoviesPageState extends State<RatedMoviesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +33,7 @@ class _RatedMoviesGridState extends State<RatedMoviesGrid> {
         onPressed: () => Navigator.of(context).pop(),
       ),
       title: const Text(
-        'Your Rated Movies',
+        RATED_MOVIE_PAGE_TITLE,
       ),
     );
   }
@@ -43,9 +43,11 @@ class _RatedMoviesGridState extends State<RatedMoviesGrid> {
     AuthenticationState state,
   ) {
     if (state is AuthenticationAuthenticatedState) {
-      context
-          .read<MoviesBloc>()
-          .add(MoviesReloadRatedMoviesEvent(state.authenticationRepository));
+      context.read<MoviesBloc>().add(
+            MoviesReloadRatedMoviesEvent(
+              state.authenticationRepository,
+            ),
+          );
     }
     return BlocBuilder<MoviesBloc, MoviesState>(
       builder: _ratedMoviesBlocBuilder,
@@ -62,11 +64,17 @@ class _RatedMoviesGridState extends State<RatedMoviesGrid> {
     if (state is MoviesLoadedState) {
       List<MovieModel> ratedMovies = state.movieRepository.ratedMoviesList;
       return (ratedMovies.isNotEmpty)
-          ? _ratedMoviesGrid(ratedMovies)
-          : _textPlaceHolderWidget(NO_RATED_MOVIES_PLACEHOLDER);
+          ? _ratedMoviesGrid(
+              ratedMovies,
+            )
+          : _textPlaceHolderWidget(
+              NO_RATED_MOVIES_PLACEHOLDER,
+            );
     }
     if (state is MoviesLoadingFailedState) {
-      return _textPlaceHolderWidget('Loading Movies Failed! Please try again!');
+      return _textPlaceHolderWidget(
+        RATED_MOVIE_LOADING_FAILED,
+      );
     }
     return Container();
   }
@@ -78,7 +86,9 @@ class _RatedMoviesGridState extends State<RatedMoviesGrid> {
       children: ratedMovies.map<Widget>(
         (movie) {
           return Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(
+              PADDING_NORMAL,
+            ),
             child: MovieCard(
               movie: movie,
             ),
@@ -93,7 +103,7 @@ class _RatedMoviesGridState extends State<RatedMoviesGrid> {
       child: Text(
         text,
         style: const TextStyle(
-          fontSize: 17,
+          fontSize: FONT_SIZE_S,
         ),
       ),
     );

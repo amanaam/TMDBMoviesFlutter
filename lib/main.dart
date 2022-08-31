@@ -31,10 +31,10 @@ class MyApp extends StatelessWidget {
         home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (context, state) {
             if (state is AuthenticationAuthenticatedState) {
-              return const MyHomePage(title: APP_TITLE);
+              return const HomePage(title: APP_TITLE);
             } else {
               //Not authenticated
-              return const Login();
+              return const LoginPage();
             }
           },
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movies/data/models/movie_model.dart';
 import 'package:movies/presentation_layer/pages/movie_page.dart';
+import 'package:movies/presentation_layer/utils/constants.dart';
 import 'package:movies/presentation_layer/utils/size_config.dart';
 
 class MovieCard extends StatelessWidget {
@@ -31,7 +32,9 @@ class MovieCard extends StatelessWidget {
         },
         style: ElevatedButton.styleFrom(
           primary: Colors.white70,
-          padding: const EdgeInsets.all(0),
+          padding: const EdgeInsets.all(
+            PADDING_NONE,
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -56,7 +59,9 @@ class MovieCard extends StatelessWidget {
     MovieModel movie,
   ) {
     return Padding(
-      padding: const EdgeInsets.all(0),
+      padding: const EdgeInsets.all(
+        PADDING_NONE,
+      ),
       child: SizedBox(
         width: SizeConfig.screenWidth * 0.5,
         height: 250,
@@ -67,7 +72,7 @@ class MovieCard extends StatelessWidget {
               fit: BoxFit.fill,
               width: SizeConfig.screenWidth / 2,
             ),
-            _renderMovieRating(movie)
+            _renderMovieRating(movie),
           ],
         ),
       ),
@@ -78,7 +83,9 @@ class MovieCard extends StatelessWidget {
     MovieModel movie,
   ) {
     return Padding(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(
+        PADDING_NORMAL,
+      ),
       child: Card(
         color: Colors.red,
         shape: RoundedRectangleBorder(
@@ -87,7 +94,10 @@ class MovieCard extends StatelessWidget {
         child: Text(
           '  ${movie.rating == 0 ? movie.voteAverage.toStringAsFixed(1) : movie.rating.toStringAsFixed(1)}  ',
           style: const TextStyle(
-              fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white),
+            fontSize: FONT_SIZE_M,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ),
     );
@@ -99,7 +109,9 @@ class MovieCard extends StatelessWidget {
     return Container(
       width: 250,
       height: 70,
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(
+        PADDING_NORMAL,
+      ),
       child: Center(
         child: Column(
           children: <Widget>[
@@ -119,7 +131,7 @@ class MovieCard extends StatelessWidget {
       textAlign: TextAlign.center,
       style: const TextStyle(
         fontWeight: FontWeight.bold,
-        fontSize: 16,
+        fontSize: FONT_SIZE_S,
         fontFamily: 'Nunito',
         color: Colors.black,
       ),
@@ -133,7 +145,7 @@ class MovieCard extends StatelessWidget {
     return Text(
       movie.releaseDate,
       style: const TextStyle(
-        fontSize: 12,
+        fontSize: FONT_SIZE_XS,
         overflow: TextOverflow.fade,
         color: Colors.black,
       ),

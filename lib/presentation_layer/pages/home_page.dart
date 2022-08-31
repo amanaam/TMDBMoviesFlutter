@@ -11,27 +11,15 @@ import 'package:movies/presentation_layer/widgets/drawer.dart';
 import 'package:movies/presentation_layer/widgets/linear_progress_indicator_widget.dart';
 import 'package:movies/presentation_layer/widgets/movies_grid.dart';
 
-Widget reloadMovies(
-  BuildContext context,
-  AuthenticationState state,
-) {
-  if (state is AuthenticationAuthenticatedState) {
-    context.read<MoviesBloc>().add(
-          MoviesGetMoviesEvent(state.authenticationRepository),
-        );
-  }
-  return const CustomLinearProgressIndicator();
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
   List<GenreModel> selectedGenreList = [];
 
   void _openFilterDialog(genres) async {
@@ -43,14 +31,20 @@ class _MyHomePageState extends State<MyHomePage> {
       validateSelectedItem: (list, val) => list!.contains(val),
       height: SizeConfig.screenWidth * 1.25,
       width: SizeConfig.screenWidth * 0.85,
-      insetPadding: const EdgeInsets.all(NORMAL_PADDING),
+      insetPadding: const EdgeInsets.all(
+        PADDING_NORMAL,
+      ),
       onItemSearch: (GenreModel genre, query) {
-        return genre.name.toLowerCase().contains(query.toLowerCase());
+        return genre.name.toLowerCase().contains(
+              query.toLowerCase(),
+            );
       },
       onApplyButtonClick: (list) {
-        setState(() {
-          selectedGenreList = List.from(list!);
-        });
+        setState(
+          () {
+            selectedGenreList = List.from(list!);
+          },
+        );
         Navigator.pop(context);
       },
     );
@@ -72,9 +66,9 @@ class _MyHomePageState extends State<MyHomePage> {
     MoviesState state,
   ) {
     if (state is MoviesInitialState) {
-      return const Scaffold(
+      return Scaffold(
         body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-          builder: reloadMovies,
+          builder: _reloadMovies,
         ),
       );
     }
@@ -86,8 +80,12 @@ class _MyHomePageState extends State<MyHomePage> {
           appBar: AppBar(
             bottom: const TabBar(
               tabs: [
-                Tab(text: HOME_TAB_TITLE_1),
-                Tab(text: HOME_TAB_TITLE_2),
+                Tab(
+                  text: HOME_TAB_TITLE_1,
+                ),
+                Tab(
+                  text: HOME_TAB_TITLE_2,
+                ),
               ],
             ),
             title: Text(widget.title),
@@ -100,15 +98,18 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               // Navigate to the Search Screen
               IconButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => SearchPage(),
-                      ),
-                    );
-                    context.read<MoviesBloc>().add(MoviesInitialEvent());
-                  },
-                  icon: const Icon(Icons.search)),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => SearchPage(),
+                    ),
+                  );
+                  context.read<MoviesBloc>().add(
+                        MoviesInitialEvent(),
+                      );
+                },
+                icon: const Icon(Icons.search),
+              ),
             ],
           ),
           body: TabBarView(
@@ -138,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return const Scaffold(
         body: Center(
           child: Text(
-            'Failed to Load Movies',
+            MOVIES_LOADING_FAILED_TEXT,
           ),
         ),
       );
@@ -146,5 +147,17 @@ class _MyHomePageState extends State<MyHomePage> {
     return const Scaffold(
       body: CustomLinearProgressIndicator(),
     );
+  }
+
+  Widget _reloadMovies(
+    BuildContext context,
+    AuthenticationState state,
+  ) {
+    if (state is AuthenticationAuthenticatedState) {
+      context.read<MoviesBloc>().add(
+            MoviesGetMoviesEvent(state.authenticationRepository),
+          );
+    }
+    return const CustomLinearProgressIndicator();
   }
 }

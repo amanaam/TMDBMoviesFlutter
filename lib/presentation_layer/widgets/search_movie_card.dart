@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/data/models/movie_model.dart';
 import 'package:movies/presentation_layer/pages/movie_page.dart';
+import 'package:movies/presentation_layer/utils/constants.dart';
 import 'package:movies/presentation_layer/utils/size_config.dart';
 
 class SearchMovieCard extends StatelessWidget {
@@ -19,7 +20,9 @@ class SearchMovieCard extends StatelessWidget {
     return Container(
       width: SizeConfig.screenWidth,
       height: 100,
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.all(
+        PADDING_NORMAL,
+      ),
       child: ElevatedButton(
         onPressed: () {
           Navigator.push(
@@ -33,7 +36,9 @@ class SearchMovieCard extends StatelessWidget {
         },
         style: ElevatedButton.styleFrom(
           primary: Colors.white70,
-          padding: const EdgeInsets.all(0),
+          padding: const EdgeInsets.all(
+            PADDING_NONE,
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -74,7 +79,9 @@ class SearchMovieCard extends StatelessWidget {
       width: 2 * SizeConfig.screenWidth / 3 - 20,
       height: 100,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(
+          PADDING_NORMAL,
+        ),
         child: Column(
           children: [
             _renderMovieTitle(
@@ -103,7 +110,7 @@ class SearchMovieCard extends StatelessWidget {
           textAlign: TextAlign.left,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: FONT_SIZE_M,
             overflow: TextOverflow.ellipsis,
             color: Colors.black,
           ),
@@ -117,13 +124,15 @@ class SearchMovieCard extends StatelessWidget {
     MovieModel movie,
   ) {
     return Container(
-      padding: const EdgeInsets.only(top: 5),
+      padding: const EdgeInsets.only(
+        top: PADDING_SMALL,
+      ),
       width: 2 * SizeConfig.screenWidth / 3 - 20,
       child: Text(
         movie.releaseDate,
         textAlign: TextAlign.left,
         style: const TextStyle(
-          fontSize: 12,
+          fontSize: FONT_SIZE_XS,
           color: Colors.black,
         ),
       ),
@@ -134,13 +143,15 @@ class SearchMovieCard extends StatelessWidget {
     MovieModel movie,
   ) {
     return Container(
-      padding: const EdgeInsets.only(top: 5),
+      padding: const EdgeInsets.only(
+        top: PADDING_SMALL,
+      ),
       width: 2 * SizeConfig.screenWidth / 3 - 20,
       child: ClipRect(
         child: Text(
           movie.overview,
           style: const TextStyle(
-            fontSize: 15,
+            fontSize: FONT_SIZE_S,
             overflow: TextOverflow.ellipsis,
             color: Colors.black,
           ),

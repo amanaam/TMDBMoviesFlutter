@@ -27,8 +27,9 @@ class MoviePage extends StatefulWidget {
 
 class _MoviePageState extends State<MoviePage> {
   @override
-  Widget build(BuildContext context) {
-    late MoviesState moviePageState;
+  Widget build(
+    BuildContext context,
+  ) {
     return BlocProvider(
       create: (context) => MoviesBloc(),
       child: Scaffold(
@@ -41,31 +42,36 @@ class _MoviePageState extends State<MoviePage> {
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-        body: BlocListener<MoviesBloc, MoviesState>(
-          listener: (context, state) {
-            if (state is MoviesRatedState) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  backgroundColor: Colors.green,
-                  content: Text(RATED_MOVIE_SUCCESSFUL)));
-              // context.read<RatedMoviesCubit>().loadRatedMovies(
-              //     context.read<AuthenticationCubit>().userRepository);
-            } else if (state is MoviesRatingFailedState) {
-              //
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  backgroundColor: Colors.red,
-                  content: Text(RATED_MOVIE_FAILED)));
-              // context.read<RatedMoviesCubit>().loadRatedMovies(
-              //     context.read<AuthenticationCubit>().userRepository);
-            } else {
-              moviePageState = state;
-            }
-          },
-          child: BlocBuilder<MoviesBloc, MoviesState>(
-            builder: _moviesBlocBuilder,
-          ),
+        body: BlocConsumer<MoviesBloc, MoviesState>(
+          listener: _blocListener,
+          builder: _moviesBlocBuilder,
         ),
       ),
     );
+  }
+
+  void _blocListener(BuildContext context, MoviesState state) {
+    if (state is MoviesRatedState) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(
+            RATED_MOVIE_SUCCESSFUL,
+          ),
+        ),
+      );
+    }
+    if (state is MoviesRatingFailedState) {
+      //
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            RATED_MOVIE_FAILED,
+          ),
+        ),
+      );
+    }
   }
 
   Widget _moviesBlocBuilder(
@@ -74,7 +80,6 @@ class _MoviePageState extends State<MoviePage> {
   ) {
     BuildContext moviePageContext = context;
     if (state is MoviesLoadingState) {
-      // context.read<Mo>().loadMovie(widget.movie.id);
       return const CustomLinearProgressIndicator();
     } else if (state is MoviesLoadedState) {
       MovieModel movie = state.movieRepository.movie;
@@ -89,26 +94,34 @@ class _MoviePageState extends State<MoviePage> {
       List<ReviewModel> movieReviews = state.movieRepository.reviews;
       return ListView(
         padding: const EdgeInsets.only(
-          top: 0,
+          top: PADDING_NONE,
         ),
         children: [
           _renderImage(movie),
           Container(
             width: SizeConfig.screenWidth,
-            padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
-                _renderTitle(movie),
-                _renderReleaseDate(movie),
-                _renderOverview(movie),
-                _renderGenre(movie),
-                _renderRunTime(movie),
-                _renderVotingAverage(movie),
-                _renderCast(movieCast),
-                _renderCrew(movieCrew),
-                _renderProductionCompanies(movie),
-                _renderButtons(movie),
-                _renderRating(movie, moviePageContext),
+                Padding(
+                  padding: const EdgeInsets.all(
+                    PADDING_XL,
+                  ),
+                  child: Column(
+                    children: [
+                      _renderTitle(movie),
+                      _renderReleaseDate(movie),
+                      _renderOverview(movie),
+                      _renderGenre(movie),
+                      _renderRunTime(movie),
+                      _renderVotingAverage(movie),
+                      _renderCast(movieCast),
+                      _renderCrew(movieCrew),
+                      _renderProductionCompanies(movie),
+                      _renderButtons(movie),
+                      _renderRating(movie, moviePageContext),
+                    ],
+                  ),
+                ),
                 _renderReviews(movieReviews),
                 _renderRecommendations(movieRecommendations),
               ],
@@ -120,9 +133,11 @@ class _MoviePageState extends State<MoviePage> {
     if (state is MoviesRatedState || state is MoviesRatingFailedState) {
       return CustomLinearProgressIndicator();
     } else {
-      context
-          .read<MoviesBloc>()
-          .add(MoviesMovieDetailsEvent(widget.movie.id.toString()));
+      context.read<MoviesBloc>().add(
+            MoviesMovieDetailsEvent(
+              widget.movie.id.toString(),
+            ),
+          );
       return const CustomLinearProgressIndicator();
     }
   }
@@ -149,7 +164,7 @@ class _MoviePageState extends State<MoviePage> {
         textAlign: TextAlign.left,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 25,
+          fontSize: FONT_SIZE_XL,
         ),
         maxLines: 2,
       ),
@@ -161,14 +176,14 @@ class _MoviePageState extends State<MoviePage> {
   ) {
     return Container(
       width: SizeConfig.screenWidth,
-      padding: const EdgeInsets.symmetric(
-        vertical: 10,
+      padding: EdgeInsets.symmetric(
+        vertical: PADDING_NORMAL,
       ),
       child: Text(
         movie.releaseDate,
         textAlign: TextAlign.left,
         style: const TextStyle(
-          fontSize: 15,
+          fontSize: FONT_SIZE_S,
         ),
         maxLines: 2,
       ),
@@ -183,7 +198,7 @@ class _MoviePageState extends State<MoviePage> {
       child: Text(
         movie.overview,
         style: const TextStyle(
-          fontSize: 16,
+          fontSize: FONT_SIZE_M,
         ),
       ),
     );
@@ -195,13 +210,13 @@ class _MoviePageState extends State<MoviePage> {
     return SizedBox(
       width: SizeConfig.screenWidth,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 10.0,
+        padding: EdgeInsets.symmetric(
+          vertical: PADDING_NORMAL,
         ),
         child: Text(
           'Runtime: ${movie.runtime.toString()} minutes',
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: FONT_SIZE_M,
           ),
         ),
       ),
@@ -214,13 +229,13 @@ class _MoviePageState extends State<MoviePage> {
     return SizedBox(
       width: SizeConfig.screenWidth,
       child: Padding(
-        padding: const EdgeInsets.only(
-          bottom: 10.0,
+        padding: EdgeInsets.only(
+          bottom: PADDING_NORMAL,
         ),
         child: Text(
           'Rating: ${movie.voteAverage.toString()}',
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: FONT_SIZE_M,
           ),
         ),
       ),
@@ -233,11 +248,11 @@ class _MoviePageState extends State<MoviePage> {
     return SizedBox(
       width: SizeConfig.screenWidth,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          0,
-          0,
-          0,
-          10,
+        padding: EdgeInsets.fromLTRB(
+          PADDING_NONE,
+          PADDING_NONE,
+          PADDING_NONE,
+          PADDING_NORMAL,
         ),
         child: Text(
           'Cast: ${movieCast.map((cast) {
@@ -246,7 +261,7 @@ class _MoviePageState extends State<MoviePage> {
               .replaceAll('(', '')
               .replaceAll(')', ''),
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: FONT_SIZE_M,
           ),
         ),
       ),
@@ -259,11 +274,11 @@ class _MoviePageState extends State<MoviePage> {
     return SizedBox(
       width: SizeConfig.screenWidth,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          0,
-          0,
-          0,
-          10,
+        padding: EdgeInsets.fromLTRB(
+          PADDING_NONE,
+          PADDING_NONE,
+          PADDING_NONE,
+          PADDING_NORMAL,
         ),
         child: Text(
           'Production Studios: ${movie.productionCompanies.map((cast) {
@@ -272,7 +287,7 @@ class _MoviePageState extends State<MoviePage> {
               .replaceAll('(', '')
               .replaceAll(')', ''),
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: FONT_SIZE_M,
           ),
         ),
       ),
@@ -286,10 +301,10 @@ class _MoviePageState extends State<MoviePage> {
       width: SizeConfig.screenWidth,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
-          0,
-          0,
-          0,
-          10,
+          PADDING_NONE,
+          PADDING_NONE,
+          PADDING_NONE,
+          PADDING_NORMAL,
         ),
         child: Text(
           'Directors: ${movieCrew.map((directors) {
@@ -298,7 +313,7 @@ class _MoviePageState extends State<MoviePage> {
               .replaceAll('(', '')
               .replaceAll(')', ''),
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: FONT_SIZE_M,
           ),
         ),
       ),
@@ -323,7 +338,7 @@ class _MoviePageState extends State<MoviePage> {
               },
               child: const InkWell(
                 child: Text(
-                  'Homepage',
+                  BUTTON_TEXT_HOMEPAGE,
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -344,7 +359,7 @@ class _MoviePageState extends State<MoviePage> {
               },
               child: const InkWell(
                 child: Text(
-                  'IMDB Page',
+                  BUTTON_TEXT_IMDB,
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -364,7 +379,7 @@ class _MoviePageState extends State<MoviePage> {
       width: SizeConfig.screenWidth,
       child: Padding(
         padding: const EdgeInsets.only(
-          top: 10,
+          top: PADDING_NORMAL,
         ),
         child: Text(
           'Genres: ${movie.genreNames.map((name) {
@@ -373,7 +388,7 @@ class _MoviePageState extends State<MoviePage> {
               .replaceAll('(', '')
               .replaceAll(')', ''),
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: FONT_SIZE_M,
           ),
         ),
       ),
@@ -389,11 +404,13 @@ class _MoviePageState extends State<MoviePage> {
         SizedBox(
           width: SizeConfig.screenWidth,
           child: const Padding(
-            padding: EdgeInsets.only(top: 10),
+            padding: EdgeInsets.only(
+              top: PADDING_NORMAL,
+            ),
             child: Text(
-              'Rate',
+              RATING_TITLE,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: FONT_SIZE_L,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -403,7 +420,9 @@ class _MoviePageState extends State<MoviePage> {
             builder: (context, state) {
           if (state is AuthenticationAuthenticatedState) {
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 0),
+              padding: const EdgeInsets.symmetric(
+                vertical: PADDING_NONE,
+              ),
               child: RatingBar.builder(
                 initialRating:
                     (movie.rating != 0 ? movie.rating : movie.voteAverage) / 2,
@@ -412,7 +431,7 @@ class _MoviePageState extends State<MoviePage> {
                 allowHalfRating: true,
                 itemCount: 5,
                 itemPadding: const EdgeInsets.symmetric(
-                  horizontal: 4.0,
+                  horizontal: PADDING_SMALL,
                 ),
                 itemBuilder: (context, _) => const Icon(
                   Icons.movie_filter_rounded,
@@ -442,10 +461,16 @@ class _MoviePageState extends State<MoviePage> {
         SizedBox(
           width: SizeConfig.screenWidth,
           child: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
+            padding: EdgeInsets.symmetric(
+              vertical: PADDING_NORMAL,
+              horizontal: PADDING_LARGE,
+            ),
             child: Text(
-              'Reviews',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              REVIEW_TITLE,
+              style: TextStyle(
+                fontSize: FONT_SIZE_L,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
@@ -458,14 +483,19 @@ class _MoviePageState extends State<MoviePage> {
                 ? movieReviews.map<Widget>(
                     (review) {
                       return ReviewCard(
-                        author: review.name,
-                        content: review.content,
+                        review: review,
                       );
                     },
                   ).toList()
                 : [
-                    const ReviewCard(
-                        author: NO_REVIEW_TITLE, content: NO_REVIEW_CONTENT)
+                    ReviewCard(
+                      review: ReviewModel(
+                        id: PLACEHOLDER_REVIEW_ID,
+                        name: NO_REVIEW_TITLE,
+                        content: NO_REVIEW_CONTENT,
+                        time: PLACEHOLDER_REVIEW_TIME,
+                      ),
+                    )
                   ],
           ),
         ),
@@ -476,25 +506,37 @@ class _MoviePageState extends State<MoviePage> {
   Widget _renderRecommendations(List<MovieModel> movieRecommendations) {
     return Column(
       children: [
-        SizedBox(
+        Container(
+          padding: const EdgeInsets.only(
+            left: PADDING_XL,
+          ),
           width: SizeConfig.screenWidth,
           child: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
+            padding: EdgeInsets.symmetric(
+              vertical: PADDING_NORMAL,
+            ),
             child: Text(
-              RECOMMENDED_MOVIES_TITLE,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              RECOMMENDED_MOVIES,
+              style: TextStyle(
+                fontSize: FONT_SIZE_L,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
         SizedBox(
-          height: 350,
+          height: 320,
           child: ListView(
             scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
             children: movieRecommendations.map<Widget>(
               (movie) {
-                return MovieCard(
-                  movie: movie,
+                return Padding(
+                  padding: const EdgeInsets.only(
+                    left: PADDING_XL,
+                  ),
+                  child: MovieCard(
+                    movie: movie,
+                  ),
                 );
               },
             ).toList(),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/bloc/movies_bloc.dart';
+import 'package:movies/presentation_layer/utils/constants.dart';
 import 'package:movies/presentation_layer/widgets/linear_progress_indicator_widget.dart';
 import 'package:movies/presentation_layer/widgets/search_movie_card.dart';
 
@@ -16,13 +17,15 @@ class _SearchPageState extends State<SearchPage> {
   final searchTextController = TextEditingController();
 
   void _search() {
-    print('Second text field: ${searchTextController.text}');
+    print(searchTextController.text);
   }
 
   void _on_search(BuildContext context, String text) {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(
-      const Duration(milliseconds: 1000),
+      const Duration(
+        milliseconds: 1000,
+      ),
       () {
         BlocProvider.of<MoviesBloc>(context).add(
           MoviesSearchEvent(text),
@@ -34,7 +37,9 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    searchTextController.addListener(_search);
+    searchTextController.addListener(
+      _search,
+    );
   }
 
   @override
@@ -55,7 +60,9 @@ class _SearchPageState extends State<SearchPage> {
             height: 40,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(
+                5,
+              ),
             ),
             child: BlocBuilder<MoviesBloc, MoviesState>(
               builder: _searchBarBlocBuilder,
@@ -87,7 +94,7 @@ class _SearchPageState extends State<SearchPage> {
                 searchTextController.clear();
               },
             ),
-            hintText: 'Search...',
+            hintText: SEARCH_TEXT_FIELD_HINT,
             border: InputBorder.none),
       ),
     );
@@ -100,9 +107,11 @@ class _SearchPageState extends State<SearchPage> {
     if (state is MoviesInitialState) {
       return const Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 10),
+          padding: EdgeInsets.symmetric(
+            vertical: PADDING_NORMAL,
+          ),
           child: Text(
-            'Search for movies',
+            SEARCH_BODY_PLACEHOLDER,
           ),
         ),
       );
@@ -123,7 +132,9 @@ class _SearchPageState extends State<SearchPage> {
     }
     if (state is MoviesLoadingFailedState) {
       return const Center(
-        child: Text("Failed to Load Movies! Please try again"),
+        child: Text(
+          SEARCH_MOVIES_FAILED_PLACEHOLDER,
+        ),
       );
     }
     return Container();

@@ -75,7 +75,7 @@ class MoviesImpl implements Movies {
   Future<List<MovieModel>> getTopRatedMovies() async {
     dynamic results = [];
     for (var i = 1; i < 3; i++) {
-      var url = Uri.parse(
+      Uri url = Uri.parse(
           '${Conf.baseUrl.get}movie/top_rated?api_key=${Conf.apiKey.get}&language=en-US&page=$i');
       var response = await http.get(url);
       if (response.statusCode == 200) {
@@ -104,7 +104,7 @@ class MoviesImpl implements Movies {
     String searchString = '',
   }) async {
     dynamic results;
-    var url = Uri.parse(
+    Uri url = Uri.parse(
         '${Conf.baseUrl.get}search/movie?api_key=${Conf.apiKey.get}&language=en-US&query=$searchString&page=1');
     var response = await http.get(url);
     if (response.statusCode == 200) {
@@ -131,7 +131,8 @@ class MoviesImpl implements Movies {
     required AuthenticationRepository authenticationRepository,
   }) async {
     dynamic results;
-    var url = Uri.parse('${Conf.baseUrl.get}account/testmanaam'
+    Uri url = Uri.parse(
+        '${Conf.baseUrl.get}account/${authenticationRepository.userName}'
         '/rated/movies?api_key=${Conf.apiKey.get}'
         '&language=en-US&session_id=${authenticationRepository.sessionId}'
         '&sort_by=created_at.asc&page=1');
@@ -162,7 +163,7 @@ class MoviesImpl implements Movies {
     required num movieID,
   }) async {
     var body = {"value": (rating * 2).toString()};
-    var url = Uri.parse(
+    Uri url = Uri.parse(
       '${Conf.baseUrl.get}movie/${movieID.toString()}/rating?'
       'api_key=${Conf.apiKey.get}&'
       'session_id=${authenticationRepository.sessionId.toString()}',
@@ -182,7 +183,7 @@ class MoviesImpl implements Movies {
     required String movieId,
   }) async {
     dynamic results;
-    var url = Uri.parse(
+    Uri url = Uri.parse(
         '${Conf.baseUrl.get}movie/$movieId/recommendations?api_key=${Conf.apiKey.get}&language=en-US&page=1');
     var response = await http.get(url);
     if (response.statusCode == 200) {
@@ -209,7 +210,7 @@ class MoviesImpl implements Movies {
     required String movieId,
   }) async {
     dynamic results;
-    var url = Uri.parse(
+    Uri url = Uri.parse(
       '${Conf.baseUrl.get}movie/$movieId?api_key=${Conf.apiKey.get}&language=en-US',
     );
     var response = await http.get(url);
@@ -236,7 +237,7 @@ class MoviesImpl implements Movies {
   }) async {
     dynamic cast;
     dynamic crew;
-    var url = Uri.parse(
+    Uri url = Uri.parse(
         '${Conf.baseUrl.get}movie/$movieId/credits?api_key=${Conf.apiKey.get}&language=en-US');
     var response = await http.get(url);
     if (response.statusCode == 200) {
@@ -280,7 +281,7 @@ class MoviesImpl implements Movies {
     required String movieId,
   }) async {
     dynamic results;
-    var url = Uri.parse(
+    Uri url = Uri.parse(
         '${Conf.baseUrl.get}movie/$movieId/reviews?api_key=${Conf.apiKey.get}&language=en-US&page=1');
     var response = await http.get(url);
     if (response.statusCode == 200) {

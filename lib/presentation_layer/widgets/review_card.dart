@@ -1,55 +1,81 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/data/models/movie_model.dart';
+import 'package:movies/presentation_layer/utils/constants.dart';
 
 class ReviewCard extends StatelessWidget {
-  final String author;
-  final String content;
+  final ReviewModel review;
 
   const ReviewCard({
     Key? key,
-    required this.author,
-    required this.content,
+    required this.review,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      SizedBox(
-        width: 300,
-        height: 250,
-        child: Card(
-          color: Colors.white70,
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                child: SizedBox(
-                  width: 400,
-                  child: Text(
-                    author,
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 17),
-                    maxLines: 2,
-                  ),
-                ),
-              ),
-              Text(
-                content,
-                style: const TextStyle(
-                    fontSize: 15, overflow: TextOverflow.ellipsis),
-                maxLines: 9,
-              ),
-            ]),
+    return Container(
+      width: 300,
+      height: 250,
+      padding: const EdgeInsets.only(
+        left: PADDING_XL,
+      ),
+      child: Card(
+        color: Colors.white70,
+        child: Padding(
+          padding: const EdgeInsets.all(
+            PADDING_LARGE,
           ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
+          child: _renderReviewContent(
+            review,
           ),
-          elevation: 4,
-          margin: const EdgeInsets.fromLTRB(0, 5, 20, 0),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+            20.0,
+          ),
+        ),
+        elevation: 4,
+        margin: const EdgeInsets.fromLTRB(
+          PADDING_NONE,
+          PADDING_SMALL,
+          PADDING_NONE,
+          PADDING_NORMAL,
         ),
       ),
-    ]);
+    );
+  }
+
+  Widget _renderReviewContent(
+    ReviewModel review,
+  ) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: PADDING_SMALL,
+          ),
+          child: SizedBox(
+            width: 400,
+            child: Text(
+              review.name,
+              textAlign: TextAlign.left,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: FONT_SIZE_M,
+              ),
+              maxLines: 2,
+            ),
+          ),
+        ),
+        Text(
+          review.content,
+          style: const TextStyle(
+            fontSize: FONT_SIZE_S,
+            overflow: TextOverflow.ellipsis,
+          ),
+          maxLines: 9,
+        ),
+      ],
+    );
   }
 }
