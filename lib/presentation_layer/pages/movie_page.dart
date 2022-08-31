@@ -81,7 +81,8 @@ class _MoviePageState extends State<MoviePage> {
     BuildContext moviePageContext = context;
     if (state is MoviesLoadingState) {
       return const CustomLinearProgressIndicator();
-    } else if (state is MoviesLoadedState) {
+    }
+    if (state is MoviesLoadedState) {
       MovieModel movie = state.movieRepository.movie;
       List<CastModel> movieCast = state.movieRepository.cast;
       List<CrewModel> movieCrew = state.movieRepository.crew
@@ -132,13 +133,16 @@ class _MoviePageState extends State<MoviePage> {
     }
     if (state is MoviesRatedState || state is MoviesRatingFailedState) {
       return CustomLinearProgressIndicator();
-    } else {
+    }
+    if (state is MoviesInitialState) {
       context.read<MoviesBloc>().add(
             MoviesMovieDetailsEvent(
               widget.movie.id.toString(),
             ),
           );
       return const CustomLinearProgressIndicator();
+    } else {
+      return Container();
     }
   }
 
@@ -438,11 +442,13 @@ class _MoviePageState extends State<MoviePage> {
                   color: Colors.amber,
                 ),
                 onRatingUpdate: (rating) {
-                  context.read<MoviesBloc>().add(MoviesRateMovieEvent(
-                        rating,
-                        movie.id,
-                        state.authenticationRepository,
-                      ));
+                  context.read<MoviesBloc>().add(
+                        MoviesRateMovieEvent(
+                          rating,
+                          movie.id,
+                          state.authenticationRepository,
+                        ),
+                      );
                 },
               ),
             );

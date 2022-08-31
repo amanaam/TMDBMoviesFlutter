@@ -52,13 +52,14 @@ class _LoginPageState extends State<LoginPage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Container(
-            padding: const EdgeInsets.only(bottom: 30.0),
-            width: SizeConfig.screenWidth,
-            child: SvgPicture.network(
-              LOGIN_PAGE_ICON,
-              color: Colors.white,
-              fit: BoxFit.contain,
-            )),
+          padding: const EdgeInsets.only(bottom: 30.0),
+          width: SizeConfig.screenWidth,
+          child: SvgPicture.network(
+            LOGIN_PAGE_ICON,
+            color: Colors.white,
+            fit: BoxFit.contain,
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(
             vertical: PADDING_NORMAL,
@@ -133,7 +134,9 @@ class _LoginPageState extends State<LoginPage> {
         ),
         child: CircularProgressIndicator(),
       );
-    } else {
+    }
+    if (state is AuthenticationInitialState ||
+        state is AuthenticationUnauthenticatedState) {
       return Padding(
         padding: const EdgeInsets.symmetric(
           vertical: PADDING_NORMAL,
@@ -158,6 +161,8 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       );
+    } else {
+      return Container();
     }
   }
 }

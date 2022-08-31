@@ -8,12 +8,17 @@ part 'movies_event.dart';
 part 'movies_state.dart';
 
 class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
-  MoviesBloc() : super(MoviesInitialState()) {
+  MoviesBloc()
+      : super(
+          MoviesInitialState(),
+        ) {
     MovieRepository movieRepository = MovieRepository();
     on<MoviesEvent>(
       (event, emit) async {
         if (event is MoviesGetMoviesEvent) {
-          emit(MoviesLoadingState());
+          emit(
+            MoviesLoadingState(),
+          );
           await MovieUsecases().getMovieUsecase(
             event.authenticationRepository,
             movieRepository,
@@ -28,7 +33,9 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
               movieRepository,
             ));
           } else {
-            emit(MoviesLoadingFailedState());
+            emit(
+              MoviesLoadingFailedState(),
+            );
           }
         }
 
@@ -37,7 +44,9 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
         }
 
         if (event is MoviesReloadMoviesEvent) {
-          emit(MoviesLoadingState());
+          emit(
+            MoviesLoadingState(),
+          );
           await MovieUsecases().getPopularMoviesUsecase(movieRepository);
           await MovieUsecases().getTopRatedMoviesUsecase(movieRepository);
           if (MovieUsecases().moviesLoadedUsecase(
@@ -50,36 +59,52 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
               movieRepository,
             ));
           } else {
-            emit(MoviesLoadingFailedState());
+            emit(
+              MoviesLoadingFailedState(),
+            );
           }
         }
 
         if (event is MoviesSearchEvent) {
-          emit(MoviesLoadingState());
+          emit(
+            MoviesLoadingState(),
+          );
           await MovieUsecases().searchMoviesUsecase(
             event.search,
             movieRepository,
           );
           if (movieRepository.searchMoviesList.isNotEmpty) {
-            emit(MoviesLoadedState(movieRepository));
+            emit(
+              MoviesLoadedState(movieRepository),
+            );
           } else {
-            emit(MoviesLoadingFailedState());
+            emit(
+              MoviesLoadingFailedState(),
+            );
           }
         }
         if (event is MoviesInitialEvent) {
-          emit(MoviesInitialState());
+          emit(
+            MoviesInitialState(),
+          );
         }
 
         if (event is MoviesMovieDetailsEvent) {
-          emit(MoviesLoadingState());
+          emit(
+            MoviesLoadingState(),
+          );
           await MovieUsecases().getMovieDetailsUsecase(
             event.movieId,
             movieRepository,
           );
           if (movieRepository.recommendations != []) {
-            emit(MoviesLoadedState(movieRepository));
+            emit(
+              MoviesLoadedState(movieRepository),
+            );
           } else {
-            emit(MoviesLoadingFailedState());
+            emit(
+              MoviesLoadingFailedState(),
+            );
           }
         }
         if (event is MoviesRateMovieEvent) {
@@ -93,7 +118,9 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
             emit(
               MoviesRatedState(),
             );
-            emit(MoviesLoadedState(movieRepository));
+            emit(
+              MoviesLoadedState(movieRepository),
+            );
           }
           if (!response) {
             emit(
@@ -107,13 +134,19 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
           }
         }
         if (event is MoviesReloadRatedMoviesEvent) {
-          emit(MoviesLoadingState());
+          emit(
+            MoviesLoadingState(),
+          );
           await MovieUsecases().getRatedMoviesUsecase(
               movieRepository, event.authenticationRepository);
           if (movieRepository.ratedMoviesList.isNotEmpty) {
-            emit(MoviesLoadedState(movieRepository));
+            emit(
+              MoviesLoadedState(movieRepository),
+            );
           } else {
-            emit(MoviesLoadingFailedState());
+            emit(
+              MoviesLoadingFailedState(),
+            );
           }
         }
       },

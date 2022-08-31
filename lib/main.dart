@@ -10,7 +10,9 @@ import 'bloc/authentication_bloc.dart';
 
 void main() {
   AppConfig.setEnvironment(Environment.PROD);
-  runApp(const MyApp());
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {

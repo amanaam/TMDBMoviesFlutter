@@ -8,13 +8,18 @@ part 'authentication_state.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-  AuthenticationBloc() : super(AuthenticationInitialState()) {
+  AuthenticationBloc()
+      : super(
+          AuthenticationInitialState(),
+        ) {
     AuthenticationRepository authenticationRepository =
         AuthenticationRepository();
 
     on<AuthenticationEvent>((event, emit) async {
       if (event is AuthenticationAuthenticateEvent) {
-        emit(AuthenticationLoadingState());
+        emit(
+          AuthenticationLoadingState(),
+        );
         if (!AuthenticateUsecase()
             .isLoggedInUsecase(authenticationRepository)) {
           await AuthenticateUsecase().authenticateUserUsecase(
@@ -24,18 +29,26 @@ class AuthenticationBloc
           );
           if (AuthenticateUsecase()
               .isLoggedInUsecase(authenticationRepository)) {
-            emit(AuthenticationAuthenticatedState(authenticationRepository));
+            emit(
+              AuthenticationAuthenticatedState(authenticationRepository),
+            );
           } else {
-            emit(AuthenticationUnauthenticatedState());
+            emit(
+              AuthenticationUnauthenticatedState(),
+            );
           }
         } else {
-          emit(AuthenticationAuthenticatedState(authenticationRepository));
+          emit(
+            AuthenticationAuthenticatedState(authenticationRepository),
+          );
         }
       }
 
       if (event is AuthenticationLogoutEvent) {
         AuthenticateUsecase().logOutUsecase(authenticationRepository);
-        emit(AuthenticationUnauthenticatedState());
+        emit(
+          AuthenticationUnauthenticatedState(),
+        );
       }
     });
   }

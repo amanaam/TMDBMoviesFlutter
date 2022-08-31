@@ -36,7 +36,8 @@ class _MoviesGridState extends State<MoviesGrid> {
   ) {
     if (state is MoviesLoadingState) {
       return const CustomLinearProgressIndicator();
-    } else if (state is MoviesLoadedState) {
+    }
+    if (state is MoviesLoadedState) {
       List<MovieModel> filteredMovies = widget.movies
           .map(
             (movie) {
@@ -58,7 +59,8 @@ class _MoviesGridState extends State<MoviesGrid> {
             'No movies based on the selected filter',
           ),
         );
-      } else {
+      }
+      if (filteredMovies.isNotEmpty) {
         return BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (context, state) {
             return RefreshIndicator(
@@ -79,9 +81,10 @@ class _MoviesGridState extends State<MoviesGrid> {
           },
         );
       }
-    } else {
-      return const CustomLinearProgressIndicator();
     }
+    if (state is MoviesInitialState){
+      return const CustomLinearProgressIndicator();
+    }return Container();
   }
 
   Widget _moviesGrid(
