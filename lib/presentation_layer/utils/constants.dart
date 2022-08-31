@@ -22,7 +22,7 @@ const String IMAGE_POSTER_STARTING_URL_SMALL =
 
 const String IMAGE_POSTER_STARTING_URL_HD = 'https://image.tmdb.org/t/p/w400';
 
-const double LINEAR_PROGRESS_WIDTH_HEIGHT = 20;
+const double LINEAR_PROGRESS_WIDTH_HEIGHT = 40;
 
 const String LOGIN_FAILED_SNACKBAR_TEXT =
     'Authentication failed! username or password is incorrect';

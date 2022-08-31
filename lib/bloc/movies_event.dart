@@ -27,13 +27,20 @@ class MoviesSearchMoviesEvent extends MoviesEvent {
   MoviesSearchMoviesEvent(this.search);
 }
 
-class MoviesPopularMoviesEvent extends MoviesEvent {}
+class MoviesReloadMoviesEvent extends MoviesEvent {}
 
 class MoviesInitialEvent extends MoviesEvent {}
 
 class MoviesLoadingEvent extends MoviesEvent {}
 
 class MoviesTopMoviesEvent extends MoviesEvent {}
+
+class MoviesLoadedEvent extends MoviesEvent {}
+
+class MoviesReloadRatedMoviesEvent extends MoviesEvent {
+  final AuthenticationRepository authenticationRepository;
+  MoviesReloadRatedMoviesEvent(this.authenticationRepository);
+}
 
 class MoviesSearchEvent extends MoviesEvent {
   final String search;

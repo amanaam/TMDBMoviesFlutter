@@ -16,14 +16,22 @@ class MovieRepository {
   bool searched = false;
 
   Future<void> getMovies(
-    AuthenticationRepository authenticationRepository,
+    AuthenticationRepository authRepository,
   ) async {
     topRatedList = await MoviesImpl().getTopRatedMovies();
     popularList = await MoviesImpl().getPopularMovies();
     ratedMoviesList = await MoviesImpl().getRatedMovies(
-      authenticationRepository: authenticationRepository,
+      authenticationRepository: authRepository,
     );
     genres = await MoviesImpl().getGenre();
+  }
+
+  Future<void> getRatedMovies(
+    AuthenticationRepository authRepository,
+  ) async {
+    ratedMoviesList = await MoviesImpl().getRatedMovies(
+      authenticationRepository: authRepository,
+    );
   }
 
   Future<void> getPopularMovies() async {

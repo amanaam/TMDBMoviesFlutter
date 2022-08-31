@@ -36,8 +36,22 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
           await MovieUsecases().getTopRatedMoviesUsecase(movieRepository);
         }
 
-        if (event is MoviesPopularMoviesEvent) {
+        if (event is MoviesReloadMoviesEvent) {
+          emit(MoviesLoadingState());
           await MovieUsecases().getPopularMoviesUsecase(movieRepository);
+          await MovieUsecases().getTopRatedMoviesUsecase(movieRepository);
+          if (MovieUsecases().moviesLoadedUsecase(
+            movieRepository,
+          )) {
+            MovieUsecases().addRatingsToListsUsecase(
+              movieRepository,
+            );
+            emit(MoviesLoadedState(
+              movieRepository,
+            ));
+          } else {
+            emit(MoviesLoadingFailedState());
+          }
         }
 
         if (event is MoviesSearchEvent) {
@@ -63,6 +77,40 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
             movieRepository,
           );
           if (movieRepository.recommendations != []) {
+            emit(MoviesLoadedState(movieRepository));
+          } else {
+            emit(MoviesLoadingFailedState());
+          }
+        }
+        if (event is MoviesRateMovieEvent) {
+          bool response = await MovieUsecases().rateMovieUsecase(
+            event.rating,
+            event.movieID,
+            event.authenticationRepository,
+            movieRepository,
+          );
+          if (response) {
+            emit(
+              MoviesRatedState(),
+            );
+            emit(MoviesLoadedState(movieRepository));
+          }
+          if (!response) {
+            emit(
+              MoviesRatingFailedState(),
+            );
+            emit(
+              MoviesLoadedState(
+                movieRepository,
+              ),
+            );
+          }
+        }
+        if (event is MoviesReloadRatedMoviesEvent) {
+          emit(MoviesLoadingState());
+          await MovieUsecases().getRatedMoviesUsecase(
+              movieRepository, event.authenticationRepository);
+          if (movieRepository.ratedMoviesList.isNotEmpty) {
             emit(MoviesLoadedState(movieRepository));
           } else {
             emit(MoviesLoadingFailedState());

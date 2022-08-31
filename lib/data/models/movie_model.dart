@@ -19,24 +19,25 @@ class MovieModel extends Movie {
     required List productionCompanies,
     int? runtime,
     num? rating,
+    required List genreNames,
   }) : super(
-          adult: adult,
-          genres: genres,
-          homepage: homepage,
-          id: id,
-          imdbId: imdbId,
-          orignalLanguage: orignalLanguage,
-          orignalTitle: orignalTitle,
-          title: title,
-          overview: overview,
-          posterPath: posterPath,
-          releaseDate: releaseDate,
-          voteAverage: voteAverage,
-          productionCompanies: productionCompanies,
-          rating: rating ?? 0,
-          runtime: runtime ?? 0,
-          posterPathHD: posterPathHD,
-        );
+            adult: adult,
+            genres: genres,
+            homepage: homepage,
+            id: id,
+            imdbId: imdbId,
+            orignalLanguage: orignalLanguage,
+            orignalTitle: orignalTitle,
+            title: title,
+            overview: overview,
+            posterPath: posterPath,
+            releaseDate: releaseDate,
+            voteAverage: voteAverage,
+            productionCompanies: productionCompanies,
+            rating: rating ?? 0,
+            runtime: runtime ?? 0,
+            posterPathHD: posterPathHD,
+            genreNames: genreNames);
   factory MovieModel.fromJSON(Map<String, dynamic> json) {
     return MovieModel(
       adult: json['adult'] ?? false,
@@ -67,6 +68,9 @@ class MovieModel extends Movie {
           : [],
       rating: json['rating'] ?? 0,
       runtime: json['runtime'] ?? 0,
+      genreNames: json['genres'] != null
+          ? json['genres'].map((genre) => genre['name']).toList()
+          : [],
     );
   }
 }

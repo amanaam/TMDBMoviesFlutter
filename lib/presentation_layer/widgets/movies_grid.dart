@@ -2,6 +2,7 @@ import 'package:collection/src/iterable_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies/bloc/authentication_bloc.dart';
 import 'package:movies/bloc/movies_bloc.dart';
 import 'package:movies/data/models/movie_model.dart';
 import 'package:movies/presentation_layer/widgets/linear_progress_indicator_widget.dart';
@@ -44,17 +45,30 @@ class _MoviesGridState extends State<MoviesGrid> {
           return const Center(
               child: Text('No movies based on the selected filter'));
         } else {
-          return GridView.count(
-              childAspectRatio: 4 / 7,
-              crossAxisCount: 2,
-              children: filteredMovies.map<Widget>((movie) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-                  child: MovieCard(
-                    movie: movie,
-                  ),
-                );
-              }).toList());
+          return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+            builder: (context, state) {
+              return RefreshIndicator(
+                onRefresh: () {
+                  if (state is AuthenticationAuthenticatedState) {
+                    context.read<MoviesBloc>().add(
+                        MoviesGetMoviesEvent(state.authenticationRepository));
+                  }
+                  return Future(() => false);
+                },
+                child: GridView.count(
+                    childAspectRatio: 4 / 7,
+                    crossAxisCount: 2,
+                    children: filteredMovies.map<Widget>((movie) {
+                      return Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: MovieCard(
+                          movie: movie,
+                        ),
+                      );
+                    }).toList()),
+              );
+            },
+          );
         }
       } else {
         return const CustomLinearProgressIndicator();

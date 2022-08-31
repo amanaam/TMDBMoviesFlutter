@@ -17,6 +17,7 @@ class Movie extends Equatable {
   num rating;
   int runtime;
   final String posterPathHD;
+  final List genreNames;
 
   Movie({
     required this.adult,
@@ -35,6 +36,7 @@ class Movie extends Equatable {
     required this.voteAverage,
     required this.runtime,
     required this.posterPathHD,
+    required this.genreNames,
   });
 
   @override

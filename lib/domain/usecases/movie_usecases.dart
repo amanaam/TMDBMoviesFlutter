@@ -17,6 +17,15 @@ class MovieUsecases {
     await movieRepository.getPopularMovies();
   }
 
+  Future<void> getRatedMoviesUsecase(
+    MovieRepository movieRepository,
+    AuthenticationRepository authenticationRepository,
+  ) async {
+    await movieRepository.getRatedMovies(
+      authenticationRepository,
+    );
+  }
+
   Future<void> getTopRatedMoviesUsecase(
     MovieRepository movieRepository,
   ) async {
@@ -73,13 +82,13 @@ class MovieUsecases {
     );
   }
 
-  Future<void> rateMovieUsecase(
+  Future<bool> rateMovieUsecase(
     num rating,
     num movieID,
     AuthenticationRepository authenticationRepository,
     MovieRepository movieRepository,
   ) async {
-    await movieRepository.rateMovie(
+    return await movieRepository.rateMovie(
       authenticationRepository,
       rating,
       movieID,

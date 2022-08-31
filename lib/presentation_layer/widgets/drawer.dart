@@ -36,19 +36,30 @@ class MyDrawer extends StatelessWidget {
               height: DRAWER_DIVIDER_HEIGHT,
               thickness: DRAWER_DIVIDER_THICKNESS,
             ),
-            ListTile(
-              leading: const Icon(Icons.favorite),
-              title: const Text(RATED_MOVIES_TITLE),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (_) => Provider.value(
-                            value: BlocProvider.of<MoviesBloc>(homecontext),
-                            child: const RatedMoviesGrid(),
-                          ) // _ is for anonymous route
-                      ),
+            BlocBuilder<AuthenticationBloc, AuthenticationState>(
+              builder: (context, state) {
+                return ListTile(
+                  leading: const Icon(Icons.favorite),
+                  title: const Text(RATED_MOVIES_TITLE),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (_) => Provider.value(
+                                value: MoviesBloc(),
+                                child: const RatedMoviesGrid(),
+                              ) // _ is for anonymous route
+                          ),
+                    );
+                    if (state is AuthenticationAuthenticatedState) {
+                      context.read<MoviesBloc>().add(
+                            MoviesReloadRatedMoviesEvent(
+                              state.authenticationRepository,
+                            ),
+                          );
+                    }
+                    // context.read<RatedMoviesCubit>().refreshPage();
+                  },
                 );
-                // context.read<RatedMoviesCubit>().refreshPage();
               },
             ),
             const Divider(

@@ -26,17 +26,6 @@ class MoviePage extends StatefulWidget {
 }
 
 class _MoviePageState extends State<MoviePage> {
-  updateRating(BuildContext context, num id, num rating) {
-    BlocListener<AuthenticationBloc, AuthenticationState>(
-        listener: (context, state) {
-      if (state is AuthenticationAuthenticatedState) {
-        // context
-        //     .read<RatedMoviesCubit>()
-        //     .rateMovie(state.userRepository, widget.id, rating);
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     late MoviesState moviePageState;
@@ -83,6 +72,7 @@ class _MoviePageState extends State<MoviePage> {
     BuildContext context,
     MoviesState state,
   ) {
+    BuildContext moviePageContext = context;
     if (state is MoviesLoadingState) {
       // context.read<Mo>().loadMovie(widget.movie.id);
       return const CustomLinearProgressIndicator();
@@ -111,13 +101,14 @@ class _MoviePageState extends State<MoviePage> {
                 _renderTitle(movie),
                 _renderReleaseDate(movie),
                 _renderOverview(movie),
+                _renderGenre(movie),
                 _renderRunTime(movie),
                 _renderVotingAverage(movie),
                 _renderCast(movieCast),
                 _renderCrew(movieCrew),
                 _renderProductionCompanies(movie),
                 _renderButtons(movie),
-                _renderRating(movie),
+                _renderRating(movie, moviePageContext),
                 _renderReviews(movieReviews),
                 _renderRecommendations(movieRecommendations),
               ],
@@ -125,6 +116,9 @@ class _MoviePageState extends State<MoviePage> {
           )
         ],
       );
+    }
+    if (state is MoviesRatedState || state is MoviesRatingFailedState) {
+      return CustomLinearProgressIndicator();
     } else {
       context
           .read<MoviesBloc>()
@@ -259,7 +253,9 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 
-  Widget _renderProductionCompanies(MovieModel movie) {
+  Widget _renderProductionCompanies(
+    MovieModel movie,
+  ) {
     return SizedBox(
       width: SizeConfig.screenWidth,
       child: Padding(
@@ -361,8 +357,32 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 
+  Widget _renderGenre(
+    MovieModel movie,
+  ) {
+    return SizedBox(
+      width: SizeConfig.screenWidth,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 10,
+        ),
+        child: Text(
+          'Genres: ${movie.genreNames.map((name) {
+            return name;
+          })}'
+              .replaceAll('(', '')
+              .replaceAll(')', ''),
+          style: const TextStyle(
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _renderRating(
     MovieModel movie,
+    BuildContext moviePageContext,
   ) {
     return Column(
       children: [
@@ -379,31 +399,37 @@ class _MoviePageState extends State<MoviePage> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 0),
-          child: RatingBar.builder(
-            initialRating:
-                (movie.rating != 0 ? movie.rating : movie.voteAverage) / 2,
-            minRating: 1,
-            direction: Axis.horizontal,
-            allowHalfRating: true,
-            itemCount: 5,
-            itemPadding: const EdgeInsets.symmetric(
-              horizontal: 4.0,
-            ),
-            itemBuilder: (context, _) => const Icon(
-              Icons.movie_filter_rounded,
-              color: Colors.amber,
-            ),
-            onRatingUpdate: (rating) {
-              updateRating(
-                context,
-                widget.movie.id,
-                rating,
-              );
-            },
-          ),
-        ),
+        BlocBuilder<AuthenticationBloc, AuthenticationState>(
+            builder: (context, state) {
+          if (state is AuthenticationAuthenticatedState) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 0),
+              child: RatingBar.builder(
+                initialRating:
+                    (movie.rating != 0 ? movie.rating : movie.voteAverage) / 2,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemPadding: const EdgeInsets.symmetric(
+                  horizontal: 4.0,
+                ),
+                itemBuilder: (context, _) => const Icon(
+                  Icons.movie_filter_rounded,
+                  color: Colors.amber,
+                ),
+                onRatingUpdate: (rating) {
+                  context.read<MoviesBloc>().add(MoviesRateMovieEvent(
+                        rating,
+                        movie.id,
+                        state.authenticationRepository,
+                      ));
+                },
+              ),
+            );
+          }
+          return Container();
+        }),
       ],
     );
   }

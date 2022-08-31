@@ -17,9 +17,7 @@ Widget reloadMovies(
 ) {
   if (state is AuthenticationAuthenticatedState) {
     context.read<MoviesBloc>().add(
-          MoviesGetMoviesEvent(
-            state.authenticationRepository,
-          ),
+          MoviesGetMoviesEvent(state.authenticationRepository),
         );
   }
   return const CustomLinearProgressIndicator();
