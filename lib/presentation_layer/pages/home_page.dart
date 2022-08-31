@@ -7,8 +7,8 @@ import 'package:movies/data/models/movie_model.dart';
 import 'package:movies/presentation_layer/pages/search_page.dart';
 import 'package:movies/presentation_layer/utils/constants.dart';
 import 'package:movies/presentation_layer/utils/size_config.dart';
-import 'package:movies/presentation_layer/widgets/drawer.dart';
-import 'package:movies/presentation_layer/widgets/linear_progress_indicator_widget.dart';
+import 'package:movies/presentation_layer/widgets/custom_drawer.dart';
+import 'package:movies/presentation_layer/widgets/custom_progress_indicator.dart';
 import 'package:movies/presentation_layer/widgets/movies_grid.dart';
 
 class HomePage extends StatefulWidget {
@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          drawer: MyDrawer(
+          drawer: CustomDrawer(
             homecontext: context,
           ),
         ),

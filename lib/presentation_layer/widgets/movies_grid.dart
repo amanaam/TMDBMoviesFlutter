@@ -6,7 +6,7 @@ import 'package:movies/bloc/authentication_bloc.dart';
 import 'package:movies/bloc/movies_bloc.dart';
 import 'package:movies/data/models/movie_model.dart';
 import 'package:movies/presentation_layer/utils/constants.dart';
-import 'package:movies/presentation_layer/widgets/linear_progress_indicator_widget.dart';
+import 'package:movies/presentation_layer/widgets/custom_progress_indicator.dart';
 import 'package:movies/presentation_layer/widgets/movie_card.dart';
 
 class MoviesGrid extends StatefulWidget {
@@ -82,9 +82,10 @@ class _MoviesGridState extends State<MoviesGrid> {
         );
       }
     }
-    if (state is MoviesInitialState){
+    if (state is MoviesInitialState) {
       return const CustomLinearProgressIndicator();
-    }return Container();
+    }
+    return Container();
   }
 
   Widget _moviesGrid(

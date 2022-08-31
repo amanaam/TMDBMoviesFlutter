@@ -7,10 +7,10 @@ import 'package:movies/presentation_layer/pages/rated_movies_page.dart';
 import 'package:movies/presentation_layer/utils/constants.dart';
 import 'package:provider/src/provider.dart';
 
-class MyDrawer extends StatelessWidget {
+class CustomDrawer extends StatelessWidget {
   final BuildContext homecontext;
 
-  const MyDrawer({
+  const CustomDrawer({
     Key? key,
     required this.homecontext,
   }) : super(key: key);

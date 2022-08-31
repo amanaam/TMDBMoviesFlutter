@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/bloc/movies_bloc.dart';
 import 'package:movies/presentation_layer/utils/constants.dart';
-import 'package:movies/presentation_layer/widgets/linear_progress_indicator_widget.dart';
+import 'package:movies/presentation_layer/widgets/custom_progress_indicator.dart';
 import 'package:movies/presentation_layer/widgets/search_movie_card.dart';
 
 class SearchPage extends StatefulWidget {
