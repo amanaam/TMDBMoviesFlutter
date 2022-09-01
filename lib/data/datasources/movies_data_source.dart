@@ -40,7 +40,7 @@ abstract class Movies {
     required String movieId,
   });
 
-  Future<List<GenreModel>> getGenre();
+  Future<List<GenreModel>> getMovieGenre();
 }
 
 class MoviesImpl implements Movies {
@@ -304,7 +304,7 @@ class MoviesImpl implements Movies {
   }
 
   @override
-  Future<List<GenreModel>> getGenre() async {
+  Future<List<GenreModel>> getMovieGenre() async {
     dynamic results;
     Uri url = Uri.parse(
       '${Conf.baseUrl.get}genre/movie/list?api_key=${Conf.apiKey.get}&language=en-US',

@@ -52,7 +52,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // context.read<AuthenticationCubit>().userRepository.genres;
     return BlocProvider(
       create: (context) => MoviesBloc(),
       child: BlocBuilder<MoviesBloc, MoviesState>(
@@ -73,7 +72,7 @@ class _HomePageState extends State<HomePage> {
       );
     }
     if (state is MoviesLoadedState) {
-      List<GenreModel> genres = state.movieRepository.genres;
+      List<GenreModel> genres = state.movieRepository.movieGenres;
       return DefaultTabController(
         length: 2,
         child: Scaffold(

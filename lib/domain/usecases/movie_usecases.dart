@@ -2,7 +2,7 @@ import 'package:movies/domain/repositories/authentication_repository.dart';
 import 'package:movies/domain/repositories/movie_repository.dart';
 
 class MovieUsecases {
-  Future<void> getMovieUsecase(
+  Future<void> moviesGetMovieUsecase(
     AuthenticationRepository authenticationRepository,
     MovieRepository movieRepository,
   ) async {
@@ -11,13 +11,13 @@ class MovieUsecases {
     );
   }
 
-  Future<void> getPopularMoviesUsecase(
+  Future<void> moviesGetPopularMoviesUsecase(
     MovieRepository movieRepository,
   ) async {
     await movieRepository.getPopularMovies();
   }
 
-  Future<void> getRatedMoviesUsecase(
+  Future<void> moviesGetRatedMoviesUsecase(
     MovieRepository movieRepository,
     AuthenticationRepository authenticationRepository,
   ) async {
@@ -26,7 +26,7 @@ class MovieUsecases {
     );
   }
 
-  Future<void> getTopRatedMoviesUsecase(
+  Future<void> moviesGetTopRatedMoviesUsecase(
     MovieRepository movieRepository,
   ) async {
     await movieRepository.getTopRatedMovies();
@@ -43,7 +43,7 @@ class MovieUsecases {
     return false;
   }
 
-  void addRatingsToListsUsecase(
+  void moviesAddRatingsToListsUsecase(
     MovieRepository movieRepository,
   ) {
     for (var i = 0; i < movieRepository.ratedMoviesList.length; i++) {
@@ -64,7 +64,7 @@ class MovieUsecases {
     }
   }
 
-  Future<void> searchMoviesUsecase(
+  Future<void> moviesSearchMoviesUsecase(
     String searchStr,
     MovieRepository movieRepository,
   ) async {
@@ -73,7 +73,7 @@ class MovieUsecases {
     );
   }
 
-  Future<void> getMovieDetailsUsecase(
+  Future<void> moviesGetMovieDetailsUsecase(
     String movieId,
     MovieRepository movieRepository,
   ) async {
@@ -82,7 +82,7 @@ class MovieUsecases {
     );
   }
 
-  Future<bool> rateMovieUsecase(
+  Future<bool> moviesRateMovieUsecase(
     num rating,
     num movieID,
     AuthenticationRepository authenticationRepository,

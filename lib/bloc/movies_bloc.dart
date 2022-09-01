@@ -19,14 +19,14 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
           emit(
             MoviesLoadingState(),
           );
-          await MovieUsecases().getMovieUsecase(
+          await MovieUsecases().moviesGetMovieUsecase(
             event.authenticationRepository,
             movieRepository,
           );
           if (MovieUsecases().moviesLoadedUsecase(
             movieRepository,
           )) {
-            MovieUsecases().addRatingsToListsUsecase(
+            MovieUsecases().moviesAddRatingsToListsUsecase(
               movieRepository,
             );
             emit(MoviesLoadedState(
@@ -40,19 +40,19 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
         }
 
         if (event is MoviesTopMoviesEvent) {
-          await MovieUsecases().getTopRatedMoviesUsecase(movieRepository);
+          await MovieUsecases().moviesGetTopRatedMoviesUsecase(movieRepository);
         }
 
         if (event is MoviesReloadMoviesEvent) {
           emit(
             MoviesLoadingState(),
           );
-          await MovieUsecases().getPopularMoviesUsecase(movieRepository);
-          await MovieUsecases().getTopRatedMoviesUsecase(movieRepository);
+          await MovieUsecases().moviesGetPopularMoviesUsecase(movieRepository);
+          await MovieUsecases().moviesGetTopRatedMoviesUsecase(movieRepository);
           if (MovieUsecases().moviesLoadedUsecase(
             movieRepository,
           )) {
-            MovieUsecases().addRatingsToListsUsecase(
+            MovieUsecases().moviesAddRatingsToListsUsecase(
               movieRepository,
             );
             emit(MoviesLoadedState(
@@ -69,7 +69,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
           emit(
             MoviesLoadingState(),
           );
-          await MovieUsecases().searchMoviesUsecase(
+          await MovieUsecases().moviesSearchMoviesUsecase(
             event.search,
             movieRepository,
           );
@@ -93,7 +93,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
           emit(
             MoviesLoadingState(),
           );
-          await MovieUsecases().getMovieDetailsUsecase(
+          await MovieUsecases().moviesGetMovieDetailsUsecase(
             event.movieId,
             movieRepository,
           );
@@ -108,7 +108,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
           }
         }
         if (event is MoviesRateMovieEvent) {
-          bool response = await MovieUsecases().rateMovieUsecase(
+          bool response = await MovieUsecases().moviesRateMovieUsecase(
             event.rating,
             event.movieID,
             event.authenticationRepository,
@@ -137,7 +137,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
           emit(
             MoviesLoadingState(),
           );
-          await MovieUsecases().getRatedMoviesUsecase(
+          await MovieUsecases().moviesGetRatedMoviesUsecase(
               movieRepository, event.authenticationRepository);
           if (movieRepository.ratedMoviesList.isNotEmpty) {
             emit(

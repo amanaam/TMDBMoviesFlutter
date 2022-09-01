@@ -11,7 +11,7 @@ class MovieRepository {
   late List<ReviewModel> reviews;
   late List<CastModel> cast;
   late List<CrewModel> crew;
-  late List<GenreModel> genres;
+  late List<GenreModel> movieGenres;
   late MovieModel movie;
   bool searched = false;
 
@@ -23,7 +23,7 @@ class MovieRepository {
     ratedMoviesList = await MoviesImpl().getRatedMovies(
       authenticationRepository: authRepository,
     );
-    genres = await MoviesImpl().getGenre();
+    movieGenres = await MoviesImpl().getMovieGenre();
   }
 
   Future<void> getRatedMovies(
