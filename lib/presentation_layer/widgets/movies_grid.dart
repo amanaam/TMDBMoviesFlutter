@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/bloc/authentication_bloc.dart';
 import 'package:movies/bloc/movies_bloc.dart';
-import 'package:movies/data/models/movie_model.dart';
+import 'package:movies/domain/entities/movie_entity.dart';
 import 'package:movies/presentation_layer/utils/constants.dart';
 import 'package:movies/presentation_layer/widgets/custom_progress_indicator.dart';
 import 'package:movies/presentation_layer/widgets/movie_card.dart';
@@ -15,8 +15,8 @@ class MoviesGrid extends StatefulWidget {
     required this.genres,
     required this.movies,
   }) : super(key: key);
-  final List<GenreModel> genres;
-  final List<MovieModel> movies;
+  final List<Genre> genres;
+  final List<Movie> movies;
 
   @override
   State<StatefulWidget> createState() => _MoviesGridState();
@@ -38,7 +38,7 @@ class _MoviesGridState extends State<MoviesGrid> {
       return const CustomLinearProgressIndicator();
     }
     if (state is MoviesLoadedState) {
-      List<MovieModel> filteredMovies = widget.movies
+      List<Movie> filteredMovies = widget.movies
           .map(
             (movie) {
               final setA = movie.genres.toSet();
@@ -89,7 +89,7 @@ class _MoviesGridState extends State<MoviesGrid> {
   }
 
   Widget _moviesGrid(
-    List<MovieModel> movies,
+    List<Movie> movies,
   ) {
     return GridView.count(
       childAspectRatio: 4 / 7,

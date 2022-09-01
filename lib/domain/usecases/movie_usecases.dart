@@ -1,38 +1,52 @@
 import 'package:movies/domain/repositories/authentication_repository.dart';
 import 'package:movies/domain/repositories/movie_repository.dart';
 
-class MovieUsecases {
-  Future<void> moviesGetMovieUsecase(
+abstract class MoviesUsecase {}
+
+class MoviesGetMoviesUsecase extends MoviesUsecase {
+  Future<void> call(
+    //multiple calls should be placed here
     AuthenticationRepository authenticationRepository,
     MovieRepository movieRepository,
   ) async {
-    await movieRepository.getMovies(
+    await movieRepository.getMyRatedMovies(
       authenticationRepository,
     );
+    await movieRepository.getPopularMovies();
+    await movieRepository.getTopRatedMovies();
+    await movieRepository.getGenres();
   }
+}
 
-  Future<void> moviesGetPopularMoviesUsecase(
+class MoviesGetPopularMoviesUsecase extends MoviesUsecase {
+  Future<void> call(
     MovieRepository movieRepository,
   ) async {
     await movieRepository.getPopularMovies();
   }
+}
 
-  Future<void> moviesGetRatedMoviesUsecase(
+class MoviesGetMyRatedMoviesUsecase extends MoviesUsecase {
+  Future<void> call(
     MovieRepository movieRepository,
     AuthenticationRepository authenticationRepository,
   ) async {
-    await movieRepository.getRatedMovies(
+    await movieRepository.getMyRatedMovies(
       authenticationRepository,
     );
   }
+}
 
-  Future<void> moviesGetTopRatedMoviesUsecase(
+class MoviesGetTopRatedMoviesUsecase extends MoviesUsecase {
+  Future<void> call(
     MovieRepository movieRepository,
   ) async {
     await movieRepository.getTopRatedMovies();
   }
+}
 
-  bool moviesLoadedUsecase(
+class MoviesLoadedUsecase extends MoviesUsecase {
+  bool call(
     MovieRepository movieRepository,
   ) {
     if (movieRepository.ratedMoviesList.isNotEmpty &&
@@ -42,8 +56,10 @@ class MovieUsecases {
     }
     return false;
   }
+}
 
-  void moviesAddRatingsToListsUsecase(
+class MoviesAddRatingsToListsUsecase extends MoviesUsecase {
+  void call(
     MovieRepository movieRepository,
   ) {
     for (var i = 0; i < movieRepository.ratedMoviesList.length; i++) {
@@ -63,8 +79,10 @@ class MovieUsecases {
       }
     }
   }
+}
 
-  Future<void> moviesSearchMoviesUsecase(
+class MoviesSearchMoviesUsecase extends MoviesUsecase {
+  Future<void> call(
     String searchStr,
     MovieRepository movieRepository,
   ) async {
@@ -72,8 +90,10 @@ class MovieUsecases {
       searchStr,
     );
   }
+}
 
-  Future<void> moviesGetMovieDetailsUsecase(
+class MoviesGetMovieDetailsUsecase extends MoviesUsecase {
+  Future<void> call(
     String movieId,
     MovieRepository movieRepository,
   ) async {
@@ -81,8 +101,10 @@ class MovieUsecases {
       movieId,
     );
   }
+}
 
-  Future<bool> moviesRateMovieUsecase(
+class MoviesRateMovieUsecase extends MoviesUsecase {
+  Future<bool> call(
     num rating,
     num movieID,
     AuthenticationRepository authenticationRepository,

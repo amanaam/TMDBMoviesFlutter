@@ -5,8 +5,10 @@ class AuthenticationRepository {
   late String userName;
   bool authenticated = false;
 
+  AuthenticationImpl authenticationImpl = AuthenticationImpl();
+
   Future<void> authenticateUser(username, password) async {
-    sessionId = await AuthenticationImpl().authenticate(
+    sessionId = await authenticationImpl.authenticate(
       username: username,
       password: password,
     );

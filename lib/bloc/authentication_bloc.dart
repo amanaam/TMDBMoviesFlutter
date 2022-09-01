@@ -14,21 +14,24 @@ class AuthenticationBloc
         ) {
     AuthenticationRepository authenticationRepository =
         AuthenticationRepository();
+    AuthenticateUserUsecase authenticateUserUsecase = AuthenticateUserUsecase();
+    AuthenticateIsLoggedInUsecase authenticateIsLoggedInUsecase =
+        AuthenticateIsLoggedInUsecase();
+    AuthenticateLogOutUsecase authenticateLogOutUsecase =
+        AuthenticateLogOutUsecase();
 
     on<AuthenticationEvent>((event, emit) async {
       if (event is AuthenticationAuthenticateEvent) {
         emit(
           AuthenticationLoadingState(),
         );
-        if (!AuthenticateUsecase()
-            .isLoggedInUsecase(authenticationRepository)) {
-          await AuthenticateUsecase().authenticateUserUsecase(
+        if (!authenticateIsLoggedInUsecase.call(authenticationRepository)) {
+          await authenticateUserUsecase.call(
             event.username,
             event.password,
             authenticationRepository,
           );
-          if (AuthenticateUsecase()
-              .isLoggedInUsecase(authenticationRepository)) {
+          if (authenticateIsLoggedInUsecase.call(authenticationRepository)) {
             emit(
               AuthenticationAuthenticatedState(authenticationRepository),
             );
@@ -45,7 +48,7 @@ class AuthenticationBloc
       }
 
       if (event is AuthenticationLogoutEvent) {
-        AuthenticateUsecase().logOutUsecase(authenticationRepository);
+        authenticateLogOutUsecase.call(authenticationRepository);
         emit(
           AuthenticationUnauthenticatedState(),
         );

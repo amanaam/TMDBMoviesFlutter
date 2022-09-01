@@ -25,8 +25,9 @@ class MyApp extends StatelessWidget {
       create: (context) => AuthenticationBloc(),
       child: MaterialApp(
         theme: ThemeData(
-          colorScheme:
-              ColorScheme.fromSwatch().copyWith(primary: TMDBColors.black),
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+            primary: TMDBColors.black,
+          ),
           brightness: Brightness.light,
           backgroundColor: Colors.black,
         ),

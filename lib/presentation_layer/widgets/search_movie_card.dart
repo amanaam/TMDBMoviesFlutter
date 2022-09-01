@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movies/data/models/movie_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies/bloc/authentication_bloc.dart';
+import 'package:movies/bloc/movies_bloc.dart';
+import 'package:movies/domain/entities/movie_entity.dart';
 import 'package:movies/presentation_layer/pages/movie_page.dart';
 import 'package:movies/presentation_layer/utils/constants.dart';
 import 'package:movies/presentation_layer/utils/size_config.dart';
 
 class SearchMovieCard extends StatelessWidget {
-  final MovieModel movie;
+  final Movie movie;
 
   const SearchMovieCard({
     Key? key,
@@ -14,6 +17,23 @@ class SearchMovieCard extends StatelessWidget {
   }) : super(key: key);
 
   get dateFormatter => null;
+
+  void _updateRating(
+    BuildContext context,
+  ) {
+    BlocBuilder<AuthenticationBloc, AuthenticationState>(
+      builder: (context, state) {
+        if (state is AuthenticationAuthenticatedState) {
+          context.read<MoviesBloc>().add(
+                MoviesGetMoviesEvent(
+                  state.authenticationRepository,
+                ),
+              );
+        }
+        return Container();
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +50,7 @@ class SearchMovieCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => MoviePage(
                 movie: movie,
+                updateRating: _updateRating,
               ),
             ),
           );
@@ -60,7 +81,7 @@ class SearchMovieCard extends StatelessWidget {
   }
 
   Widget _renderMovieImage(
-    MovieModel movie,
+    Movie movie,
   ) {
     return SizedBox(
       width: SizeConfig.screenWidth / 3,
@@ -73,7 +94,7 @@ class SearchMovieCard extends StatelessWidget {
   }
 
   Widget _renderMovieDetails(
-    MovieModel movie,
+    Movie movie,
   ) {
     return SizedBox(
       width: 2 * SizeConfig.screenWidth / 3 - 20,
@@ -100,7 +121,7 @@ class SearchMovieCard extends StatelessWidget {
   }
 
   Widget _renderMovieTitle(
-    MovieModel movie,
+    Movie movie,
   ) {
     return SizedBox(
       width: 2 * SizeConfig.screenWidth / 3 - 20,
@@ -121,7 +142,7 @@ class SearchMovieCard extends StatelessWidget {
   }
 
   Widget _renderMovieYear(
-    MovieModel movie,
+    Movie movie,
   ) {
     return Container(
       padding: const EdgeInsets.only(
@@ -140,7 +161,7 @@ class SearchMovieCard extends StatelessWidget {
   }
 
   Widget _renderMovieOverview(
-    MovieModel movie,
+    Movie movie,
   ) {
     return Container(
       padding: const EdgeInsets.only(

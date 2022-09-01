@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/bloc/authentication_bloc.dart';
 import 'package:movies/bloc/movies_bloc.dart';
-import 'package:movies/data/models/movie_model.dart';
+import 'package:movies/domain/entities/movie_entity.dart';
 import 'package:movies/presentation_layer/pages/search_page.dart';
 import 'package:movies/presentation_layer/utils/constants.dart';
 import 'package:movies/presentation_layer/utils/size_config.dart';
@@ -20,10 +20,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<GenreModel> selectedGenreList = [];
+  List<Genre> selectedGenreList = [];
 
   void _openFilterDialog(genres) async {
-    await FilterListDialog.display<GenreModel>(
+    await FilterListDialog.display<Genre>(
       context,
       listData: genres,
       selectedListData: selectedGenreList,
@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
       insetPadding: const EdgeInsets.all(
         PADDING_NORMAL,
       ),
-      onItemSearch: (GenreModel genre, query) {
+      onItemSearch: (Genre genre, query) {
         return genre.name.toLowerCase().contains(
               query.toLowerCase(),
             );
@@ -55,24 +55,24 @@ class _HomePageState extends State<HomePage> {
     return BlocProvider(
       create: (context) => MoviesBloc(),
       child: BlocBuilder<MoviesBloc, MoviesState>(
-        builder: _homeBuilder,
+        builder: _blocBuilder,
       ),
     );
   }
 
-  Widget _homeBuilder(
+  Widget _blocBuilder(
     BuildContext context,
     MoviesState state,
   ) {
     if (state is MoviesInitialState) {
       return Scaffold(
         body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-          builder: _reloadMovies,
+          builder: _authenticationBlocBuilder,
         ),
       );
     }
     if (state is MoviesLoadedState) {
-      List<GenreModel> genres = state.movieRepository.movieGenres;
+      List<Genre> genres = state.movieRepository.movieGenres;
       return DefaultTabController(
         length: 2,
         child: Scaffold(
@@ -98,14 +98,7 @@ class _HomePageState extends State<HomePage> {
               // Navigate to the Search Screen
               IconButton(
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => SearchPage(),
-                    ),
-                  );
-                  context.read<MoviesBloc>().add(
-                        MoviesInitialEvent(),
-                      );
+                  _searchPageRoute(context);
                 },
                 icon: const Icon(Icons.search),
               ),
@@ -148,7 +141,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _reloadMovies(
+  Widget _authenticationBlocBuilder(
+    //rename to authenticationBlocBuilder
     BuildContext context,
     AuthenticationState state,
   ) {
@@ -158,5 +152,15 @@ class _HomePageState extends State<HomePage> {
           );
     }
     return const CustomLinearProgressIndicator();
+  }
+
+  void _searchPageRoute(
+    BuildContext context,
+  ) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => SearchPage(),
+      ),
+    );
   }
 }

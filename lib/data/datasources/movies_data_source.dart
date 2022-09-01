@@ -5,16 +5,16 @@ import 'package:movies/app_config.dart';
 import 'package:movies/data/models/movie_model.dart';
 import 'package:movies/domain/repositories/authentication_repository.dart';
 
-abstract class Movies {
-  Future<List> getPopularMovies();
+abstract class MoviesDataSource {
+  Future<List<MovieModel>> getPopularMovies();
 
-  Future<List> getTopRatedMovies();
+  Future<List<MovieModel>> getTopRatedMovies();
 
-  Future<List> getSearchMovies({
+  Future<List<MovieModel>> getSearchMovies({
     String searchString = '',
   });
 
-  Future<List> getRatedMovies({
+  Future<List<MovieModel>> getMyRatedMovies({
     required AuthenticationRepository authenticationRepository,
   });
 
@@ -40,10 +40,10 @@ abstract class Movies {
     required String movieId,
   });
 
-  Future<List<GenreModel>> getMovieGenre();
+  Future<List<GenreModel>> getMovieGenres();
 }
 
-class MoviesImpl implements Movies {
+class MoviesDataSourceImpl implements MoviesDataSource {
   @override
   Future<List<MovieModel>> getPopularMovies() async {
     dynamic results = [];
@@ -127,7 +127,7 @@ class MoviesImpl implements Movies {
   }
 
   @override
-  Future<List<MovieModel>> getRatedMovies({
+  Future<List<MovieModel>> getMyRatedMovies({
     required AuthenticationRepository authenticationRepository,
   }) async {
     dynamic results;
@@ -304,7 +304,7 @@ class MoviesImpl implements Movies {
   }
 
   @override
-  Future<List<GenreModel>> getMovieGenre() async {
+  Future<List<GenreModel>> getMovieGenres() async {
     dynamic results;
     Uri url = Uri.parse(
       '${Conf.baseUrl.get}genre/movie/list?api_key=${Conf.apiKey.get}&language=en-US',

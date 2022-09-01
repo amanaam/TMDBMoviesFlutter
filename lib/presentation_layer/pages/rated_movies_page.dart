@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/bloc/authentication_bloc.dart';
 import 'package:movies/bloc/movies_bloc.dart';
-import 'package:movies/data/models/movie_model.dart';
+import 'package:movies/domain/entities/movie_entity.dart';
 import 'package:movies/presentation_layer/utils/constants.dart';
 import 'package:movies/presentation_layer/widgets/custom_progress_indicator.dart';
 import 'package:movies/presentation_layer/widgets/movie_card.dart';
@@ -62,7 +62,7 @@ class _RatedMoviesPageState extends State<RatedMoviesPage> {
       return const CustomLinearProgressIndicator();
     }
     if (state is MoviesLoadedState) {
-      List<MovieModel> ratedMovies = state.movieRepository.ratedMoviesList;
+      List<Movie> ratedMovies = state.movieRepository.ratedMoviesList;
       return (ratedMovies.isNotEmpty)
           ? _ratedMoviesGrid(
               ratedMovies,
@@ -79,7 +79,7 @@ class _RatedMoviesPageState extends State<RatedMoviesPage> {
     return Container();
   }
 
-  Widget _ratedMoviesGrid(List<MovieModel> ratedMovies) {
+  Widget _ratedMoviesGrid(List<Movie> ratedMovies) {
     return GridView.count(
       childAspectRatio: 4 / 7,
       crossAxisCount: 2,

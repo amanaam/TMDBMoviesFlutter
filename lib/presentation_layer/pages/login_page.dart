@@ -76,8 +76,10 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: PADDING_NORMAL, horizontal: PADDING_XL),
+          padding: const EdgeInsets.symmetric(
+            vertical: PADDING_NORMAL,
+            horizontal: PADDING_XL,
+          ),
           child: TextField(
             obscureText: true,
             controller: passwordController,
@@ -143,12 +145,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         child: ElevatedButton(
           onPressed: () {
-            context.read<AuthenticationBloc>().add(
-                  AuthenticationAuthenticateEvent(
-                    usernameController.text,
-                    passwordController.text,
-                  ),
-                );
+            _loginButton(context);
           },
           style: ElevatedButton.styleFrom(
             primary: Colors.white,
@@ -164,5 +161,16 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       return Container();
     }
+  }
+
+  void _loginButton(
+    BuildContext context,
+  ) {
+    return context.read<AuthenticationBloc>().add(
+          AuthenticationAuthenticateEvent(
+            usernameController.text,
+            passwordController.text,
+          ),
+        );
   }
 }

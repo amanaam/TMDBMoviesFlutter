@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movies/data/models/movie_model.dart';
+import 'package:movies/domain/entities/movie_entity.dart';
 import 'package:movies/presentation_layer/utils/constants.dart';
 
 class ReviewCard extends StatelessWidget {
-  final ReviewModel review;
+  final Review review;
 
   const ReviewCard({
     Key? key,
@@ -46,7 +46,7 @@ class ReviewCard extends StatelessWidget {
   }
 
   Widget _renderReviewContent(
-    ReviewModel review,
+    Review review,
   ) {
     return Column(
       children: [

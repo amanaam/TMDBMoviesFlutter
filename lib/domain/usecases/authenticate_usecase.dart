@@ -1,7 +1,9 @@
 import 'package:movies/domain/repositories/authentication_repository.dart';
 
-class AuthenticateUsecase {
-  Future<void> authenticateUserUsecase(
+abstract class AuthenticateUsecase {}
+
+class AuthenticateUserUsecase extends AuthenticateUsecase {
+  Future<void> call(
     String username,
     String password,
     AuthenticationRepository authenticationRepository,
@@ -11,15 +13,19 @@ class AuthenticateUsecase {
       password,
     );
   }
+}
 
-  void logOutUsecase(
+class AuthenticateLogOutUsecase extends AuthenticateUsecase {
+  void call(
     AuthenticationRepository authenticationRepository,
   ) {
     authenticationRepository.sessionId = '';
     authenticationRepository.authenticated = false;
   }
+}
 
-  bool isLoggedInUsecase(
+class AuthenticateIsLoggedInUsecase extends AuthenticateUsecase {
+  bool call(
     AuthenticationRepository authenticationRepository,
   ) {
     return authenticationRepository.authenticated == true;

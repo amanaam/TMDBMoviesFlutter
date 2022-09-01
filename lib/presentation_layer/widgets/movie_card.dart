@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:movies/data/models/movie_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies/bloc/authentication_bloc.dart';
+import 'package:movies/bloc/movies_bloc.dart';
+import 'package:movies/domain/entities/movie_entity.dart';
 import 'package:movies/presentation_layer/pages/movie_page.dart';
 import 'package:movies/presentation_layer/utils/constants.dart';
 import 'package:movies/presentation_layer/utils/size_config.dart';
+import 'package:provider/src/provider.dart';
 
 class MovieCard extends StatelessWidget {
-  final MovieModel movie;
+  final Movie movie;
 
   const MovieCard({
     Key? key,
@@ -13,6 +17,27 @@ class MovieCard extends StatelessWidget {
   }) : super(key: key);
 
   get dateFormatter => null;
+
+  _updateRating(
+    BuildContext context,
+  ) {
+    BlocBuilder<AuthenticationBloc, AuthenticationState>(
+      builder: (
+        BuildContext context,
+        AuthenticationState state,
+      ) {
+        debugPrint('helloooo');
+        if (state is AuthenticationAuthenticatedState) {
+          context.read<MoviesBloc>().add(
+                MoviesGetMoviesEvent(
+                  state.authenticationRepository,
+                ),
+              );
+        }
+        return Container();
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +51,7 @@ class MovieCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => MoviePage(
                 movie: movie,
+                updateRating: _updateRating,
               ),
             ),
           );
@@ -56,7 +82,7 @@ class MovieCard extends StatelessWidget {
   }
 
   Widget _renderMoviePictureWithRating(
-    MovieModel movie,
+    Movie movie,
   ) {
     return Padding(
       padding: const EdgeInsets.all(
@@ -80,7 +106,7 @@ class MovieCard extends StatelessWidget {
   }
 
   Widget _renderMovieRating(
-    MovieModel movie,
+    Movie movie,
   ) {
     return Padding(
       padding: const EdgeInsets.all(
@@ -104,7 +130,7 @@ class MovieCard extends StatelessWidget {
   }
 
   Widget _renderMovieTitle(
-    MovieModel movie,
+    Movie movie,
   ) {
     return Container(
       width: 250,
@@ -124,7 +150,7 @@ class MovieCard extends StatelessWidget {
   }
 
   Widget _renderMovieName(
-    MovieModel movie,
+    Movie movie,
   ) {
     return Text(
       movie.title,
@@ -140,7 +166,7 @@ class MovieCard extends StatelessWidget {
   }
 
   Widget _renderMovieYear(
-    MovieModel movie,
+    Movie movie,
   ) {
     return Text(
       movie.releaseDate,

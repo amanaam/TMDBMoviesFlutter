@@ -24,7 +24,7 @@ class _SearchPageState extends State<SearchPage> {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(
       const Duration(
-        milliseconds: 1000,
+        milliseconds: 300,
       ),
       () {
         BlocProvider.of<MoviesBloc>(context).add(

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movies/bloc/authentication_bloc.dart';
 import 'package:movies/bloc/movies_bloc.dart';
-import 'package:movies/data/models/movie_model.dart';
+import 'package:movies/domain/entities/movie_entity.dart';
 import 'package:movies/presentation_layer/utils/constants.dart';
 import 'package:movies/presentation_layer/utils/size_config.dart';
 import 'package:movies/presentation_layer/widgets/custom_progress_indicator.dart';
@@ -14,11 +14,16 @@ import 'package:url_launcher/url_launcher.dart';
 import '../widgets/movie_card.dart';
 
 class MoviePage extends StatefulWidget {
-  final MovieModel movie;
+  final Movie movie;
+  final callback updateRating;
+
+  //pass entity instead of model
+  //entities are relevent to ui and not the models
 
   const MoviePage({
     Key? key,
     required this.movie,
+    required this.updateRating,
   }) : super(key: key);
 
   @override
@@ -26,6 +31,14 @@ class MoviePage extends StatefulWidget {
 }
 
 class _MoviePageState extends State<MoviePage> {
+  late Movie _movie;
+
+  @override
+  void initState() {
+    super.initState();
+    _movie = widget.movie;
+  }
+
   @override
   Widget build(
     BuildContext context,
@@ -52,6 +65,9 @@ class _MoviePageState extends State<MoviePage> {
 
   void _blocListener(BuildContext context, MoviesState state) {
     if (state is MoviesRatedState) {
+      widget.updateRating.call(
+        context,
+      );
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.green,
@@ -83,25 +99,26 @@ class _MoviePageState extends State<MoviePage> {
       return const CustomLinearProgressIndicator();
     }
     if (state is MoviesLoadedState) {
-      MovieModel movie = state.movieRepository.movie;
-      List<CastModel> movieCast = state.movieRepository.cast;
-      List<CrewModel> movieCrew = state.movieRepository.crew
+      _movie = state.movieRepository.movie;
+      List<Cast> movieCast = state.movieRepository.cast;
+      List<Crew> movieCrew = state.movieRepository.crew
           .where(
-            (i) => i.job == 'Director',
+            (Crew crew) => crew.job == 'Director',
           )
           .toList();
-      List<MovieModel> movieRecommendations =
-          state.movieRepository.recommendations;
-      List<ReviewModel> movieReviews = state.movieRepository.reviews;
+      List<Movie> movieRecommendations = state.movieRepository.recommendations;
+      List<Review> movieReviews = state.movieRepository.reviews;
       return ListView(
         padding: const EdgeInsets.only(
           top: PADDING_NONE,
         ),
         children: [
-          _renderImage(movie),
+          _renderImage(_movie),
           Container(
             width: SizeConfig.screenWidth,
             child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start, //everything will be left aligned
               children: [
                 Padding(
                   padding: const EdgeInsets.all(
@@ -109,17 +126,17 @@ class _MoviePageState extends State<MoviePage> {
                   ),
                   child: Column(
                     children: [
-                      _renderTitle(movie),
-                      _renderReleaseDate(movie),
-                      _renderOverview(movie),
-                      _renderGenre(movie),
-                      _renderRunTime(movie),
-                      _renderVotingAverage(movie),
+                      _renderTitle(_movie),
+                      _renderReleaseDate(_movie),
+                      _renderOverview(_movie),
+                      _renderGenre(_movie),
+                      _renderRunTime(_movie),
+                      _renderVotingAverage(_movie),
                       _renderCast(movieCast),
                       _renderCrew(movieCrew),
-                      _renderProductionCompanies(movie),
-                      _renderButtons(movie),
-                      _renderRating(movie, moviePageContext),
+                      _renderProductionCompanies(_movie),
+                      _renderButtons(_movie),
+                      _renderRating(_movie, moviePageContext),
                     ],
                   ),
                 ),
@@ -132,7 +149,7 @@ class _MoviePageState extends State<MoviePage> {
       );
     }
     if (state is MoviesRatedState || state is MoviesRatingFailedState) {
-      return CustomLinearProgressIndicator();
+      return const CustomLinearProgressIndicator();
     }
     if (state is MoviesInitialState) {
       context.read<MoviesBloc>().add(
@@ -147,7 +164,7 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   Widget _renderImage(
-    MovieModel movie,
+    Movie movie,
   ) {
     return SizedBox(
       width: SizeConfig.screenWidth,
@@ -159,7 +176,7 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   Widget _renderTitle(
-    MovieModel movie,
+    Movie movie,
   ) {
     return SizedBox(
       width: SizeConfig.screenWidth,
@@ -176,11 +193,11 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   Widget _renderReleaseDate(
-    MovieModel movie,
+    Movie movie,
   ) {
     return Container(
       width: SizeConfig.screenWidth,
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
         vertical: PADDING_NORMAL,
       ),
       child: Text(
@@ -195,7 +212,7 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   Widget _renderOverview(
-    MovieModel movie,
+    Movie movie,
   ) {
     return SizedBox(
       width: SizeConfig.screenWidth,
@@ -209,7 +226,7 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   Widget _renderRunTime(
-    MovieModel movie,
+    Movie movie,
   ) {
     return SizedBox(
       width: SizeConfig.screenWidth,
@@ -228,7 +245,7 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   Widget _renderVotingAverage(
-    MovieModel movie,
+    Movie movie,
   ) {
     return SizedBox(
       width: SizeConfig.screenWidth,
@@ -247,16 +264,13 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   Widget _renderCast(
-    List<CastModel> movieCast,
+    List<Cast> movieCast,
   ) {
     return SizedBox(
       width: SizeConfig.screenWidth,
       child: Padding(
-        padding: EdgeInsets.fromLTRB(
-          PADDING_NONE,
-          PADDING_NONE,
-          PADDING_NONE,
-          PADDING_NORMAL,
+        padding: const EdgeInsets.only(
+          bottom: PADDING_NORMAL,
         ),
         child: Text(
           'Cast: ${movieCast.map((cast) {
@@ -273,17 +287,12 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   Widget _renderProductionCompanies(
-    MovieModel movie,
+    Movie movie,
   ) {
     return SizedBox(
       width: SizeConfig.screenWidth,
       child: Padding(
-        padding: EdgeInsets.fromLTRB(
-          PADDING_NONE,
-          PADDING_NONE,
-          PADDING_NONE,
-          PADDING_NORMAL,
-        ),
+        padding: const EdgeInsets.only(bottom: PADDING_NORMAL),
         child: Text(
           'Production Studios: ${movie.productionCompanies.map((cast) {
             return cast ?? '';
@@ -299,7 +308,7 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   Widget _renderCrew(
-    List<CrewModel> movieCrew,
+    List<Crew> movieCrew,
   ) {
     return SizedBox(
       width: SizeConfig.screenWidth,
@@ -325,7 +334,7 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   Widget _renderButtons(
-    MovieModel movie,
+    Movie movie,
   ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -377,7 +386,7 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   Widget _renderGenre(
-    MovieModel movie,
+    Movie movie,
   ) {
     return SizedBox(
       width: SizeConfig.screenWidth,
@@ -400,7 +409,7 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   Widget _renderRating(
-    MovieModel movie,
+    Movie movie,
     BuildContext moviePageContext,
   ) {
     return Column(
@@ -421,46 +430,52 @@ class _MoviePageState extends State<MoviePage> {
           ),
         ),
         BlocBuilder<AuthenticationBloc, AuthenticationState>(
-            builder: (context, state) {
-          if (state is AuthenticationAuthenticatedState) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: PADDING_NONE,
-              ),
-              child: RatingBar.builder(
-                initialRating:
-                    (movie.rating != 0 ? movie.rating : movie.voteAverage) / 2,
-                minRating: 1,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemPadding: const EdgeInsets.symmetric(
-                  horizontal: PADDING_SMALL,
-                ),
-                itemBuilder: (context, _) => const Icon(
-                  Icons.movie_filter_rounded,
-                  color: Colors.amber,
-                ),
-                onRatingUpdate: (rating) {
-                  context.read<MoviesBloc>().add(
-                        MoviesRateMovieEvent(
-                          rating,
-                          movie.id,
-                          state.authenticationRepository,
-                        ),
-                      );
-                },
-              ),
-            );
-          }
-          return Container();
-        }),
+          builder: _authenticationBlocRateMovies,
+        )
       ],
     );
   }
 
+  Widget _authenticationBlocRateMovies(
+    BuildContext context,
+    AuthenticationState state,
+  ) {
+    if (state is AuthenticationAuthenticatedState) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: PADDING_NONE,
+        ),
+        child: RatingBar.builder(
+          initialRating:
+              (_movie.rating != 0 ? _movie.rating : _movie.voteAverage) / 2,
+          minRating: 1,
+          direction: Axis.horizontal,
+          allowHalfRating: true,
+          itemCount: 5,
+          itemPadding: const EdgeInsets.symmetric(
+            horizontal: PADDING_SMALL,
+          ),
+          itemBuilder: (context, _) => const Icon(
+            Icons.movie_filter_rounded,
+            color: Colors.amber,
+          ),
+          onRatingUpdate: (rating) {
+            context.read<MoviesBloc>().add(
+                  MoviesRateMovieEvent(
+                    rating,
+                    _movie.id,
+                    state.authenticationRepository,
+                  ),
+                );
+          },
+        ),
+      );
+    }
+    return Container();
+  }
+
   Widget _renderReviews(
-    List<ReviewModel> movieReviews,
+    List<Review> movieReviews,
   ) {
     return Column(
       children: [
@@ -485,7 +500,7 @@ class _MoviePageState extends State<MoviePage> {
           child: ListView(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
-            children: movieReviews.length > 0
+            children: movieReviews.isNotEmpty
                 ? movieReviews.map<Widget>(
                     (review) {
                       return ReviewCard(
@@ -495,7 +510,7 @@ class _MoviePageState extends State<MoviePage> {
                   ).toList()
                 : [
                     ReviewCard(
-                      review: ReviewModel(
+                      review: Review(
                         id: PLACEHOLDER_REVIEW_ID,
                         name: NO_REVIEW_TITLE,
                         content: NO_REVIEW_CONTENT,
@@ -509,7 +524,7 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 
-  Widget _renderRecommendations(List<MovieModel> movieRecommendations) {
+  Widget _renderRecommendations(List<Movie> movieRecommendations) {
     return Column(
       children: [
         Container(
@@ -552,3 +567,7 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 }
+
+typedef callback = Function(
+  BuildContext,
+);

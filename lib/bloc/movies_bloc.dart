@@ -13,20 +13,35 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
           MoviesInitialState(),
         ) {
     MovieRepository movieRepository = MovieRepository();
+    MoviesGetMoviesUsecase moviesGetMoviesUsecase = MoviesGetMoviesUsecase();
+    MoviesLoadedUsecase moviesLoadedUsecase = MoviesLoadedUsecase();
+    MoviesAddRatingsToListsUsecase moviesAddRatingsToListsUsecase =
+        MoviesAddRatingsToListsUsecase();
+    MoviesGetTopRatedMoviesUsecase moviesGetTopRatedMoviesUsecase =
+        MoviesGetTopRatedMoviesUsecase();
+    MoviesGetPopularMoviesUsecase moviesGetPopularMoviesUsecase =
+        MoviesGetPopularMoviesUsecase();
+    MoviesSearchMoviesUsecase moviesSearchMoviesUsecase =
+        MoviesSearchMoviesUsecase();
+    MoviesGetMovieDetailsUsecase moviesGetMovieDetailsUsecase =
+        MoviesGetMovieDetailsUsecase();
+    MoviesRateMovieUsecase moviesRateMovieUsecase = MoviesRateMovieUsecase();
+    MoviesGetMyRatedMoviesUsecase moviesGetMyRatedMoviesUsecase =
+        MoviesGetMyRatedMoviesUsecase();
     on<MoviesEvent>(
       (event, emit) async {
         if (event is MoviesGetMoviesEvent) {
           emit(
             MoviesLoadingState(),
           );
-          await MovieUsecases().moviesGetMovieUsecase(
+          await moviesGetMoviesUsecase.call(
             event.authenticationRepository,
             movieRepository,
           );
-          if (MovieUsecases().moviesLoadedUsecase(
+          if (moviesLoadedUsecase.call(
             movieRepository,
           )) {
-            MovieUsecases().moviesAddRatingsToListsUsecase(
+            moviesAddRatingsToListsUsecase.call(
               movieRepository,
             );
             emit(MoviesLoadedState(
@@ -40,19 +55,19 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
         }
 
         if (event is MoviesTopMoviesEvent) {
-          await MovieUsecases().moviesGetTopRatedMoviesUsecase(movieRepository);
+          await moviesGetTopRatedMoviesUsecase.call(movieRepository);
         }
 
         if (event is MoviesReloadMoviesEvent) {
           emit(
             MoviesLoadingState(),
           );
-          await MovieUsecases().moviesGetPopularMoviesUsecase(movieRepository);
-          await MovieUsecases().moviesGetTopRatedMoviesUsecase(movieRepository);
-          if (MovieUsecases().moviesLoadedUsecase(
+          await moviesGetPopularMoviesUsecase.call(movieRepository);
+          await moviesGetTopRatedMoviesUsecase.call(movieRepository);
+          if (moviesLoadedUsecase.call(
             movieRepository,
           )) {
-            MovieUsecases().moviesAddRatingsToListsUsecase(
+            moviesAddRatingsToListsUsecase.call(
               movieRepository,
             );
             emit(MoviesLoadedState(
@@ -69,7 +84,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
           emit(
             MoviesLoadingState(),
           );
-          await MovieUsecases().moviesSearchMoviesUsecase(
+          await moviesSearchMoviesUsecase.call(
             event.search,
             movieRepository,
           );
@@ -93,7 +108,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
           emit(
             MoviesLoadingState(),
           );
-          await MovieUsecases().moviesGetMovieDetailsUsecase(
+          await moviesGetMovieDetailsUsecase.call(
             event.movieId,
             movieRepository,
           );
@@ -108,7 +123,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
           }
         }
         if (event is MoviesRateMovieEvent) {
-          bool response = await MovieUsecases().moviesRateMovieUsecase(
+          bool response = await moviesRateMovieUsecase.call(
             event.rating,
             event.movieID,
             event.authenticationRepository,
@@ -137,7 +152,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
           emit(
             MoviesLoadingState(),
           );
-          await MovieUsecases().moviesGetRatedMoviesUsecase(
+          await moviesGetMyRatedMoviesUsecase.call(
               movieRepository, event.authenticationRepository);
           if (movieRepository.ratedMoviesList.isNotEmpty) {
             emit(
